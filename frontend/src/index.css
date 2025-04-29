@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+
+@theme{
+    --color-primary : #8813E4;
+    --color-secondary : #253BCD;
+    --color-textColor : #9F9F9F;
+}
+
+*{
+    font-family: 'Outfit', sans-serif;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button , input[type="number"]::-webkit-inner-spin-button{
+    appearance: none;
+    margin: 0;
+}
+
+input[type="number"]{
+    appearance: none;
+}
