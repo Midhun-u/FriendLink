@@ -227,7 +227,7 @@ const People = () => {
                   ) : (
                     <button
                       onClick={() => handleSendRequest(person._id, person)}
-                      className="flex mt-2 justify-center cursor-pointer items-center bg-gray-50 w-full h-auto py-1 gap-2"
+                      className="flex mt-2 justify-center cursor-pointer items-center bg-gray-50 w-[95%] h-auto py-1 gap-2"
                     >
                       <img
                         className="w-5 h-5 lg:w-8 lg:h-8 "

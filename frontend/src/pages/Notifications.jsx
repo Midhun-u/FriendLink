@@ -177,11 +177,21 @@ const Notifications = () => {
                     alt=""
                   />
                 ) : (
-                  <img
-                    className="w-14 h-14 lg:w-17 lg:h-17 rounded-full shrink-0"
-                    src={assets.nullProfilePic}
-                    alt=""
-                  />
+                  notif.person.gender === "Male"
+                  ?
+                  <img className="w-14 h-14 lg:w-17 lg:h-17 rounded-full shrink-0" src={assets.maleGenderIcon} alt="" />
+                  :
+                  (
+                    notif.person.gender === "Female"
+                    ?
+                    <img className="w-14 h-14 lg:w-17 lg:h-17 rounded-full shrink-0" src={assets.femaleGenderIcon} alt="" />
+                    :
+                    <img
+                      className="w-14 h-14 lg:w-17 lg:h-17 rounded-full shrink-0"
+                      src={assets.nullProfilePic}
+                      alt=""
+                    />
+                  )
                 )}
                 <span className="lg:text-lg shrink-0">{notif.message}</span>
               </div>

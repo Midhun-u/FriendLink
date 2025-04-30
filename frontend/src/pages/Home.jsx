@@ -45,7 +45,7 @@ const Home = () => {
         toast.error("Something went wrong");
       }
     }
-  };
+  }
 
   //function for get profile
   const getProfile = async () => {

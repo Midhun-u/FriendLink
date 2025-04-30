@@ -62,9 +62,9 @@ const Profile = () => {
 
       if (result.success) {
         toast.success(result.message);
-
         setEditProfile(false);
       }
+      console.log(result)
     } catch (error) {
       const errorMessage = error?.response.data
             
@@ -127,11 +127,29 @@ const Profile = () => {
                 />
               </div>
             ) : (
+              userData.gender === "Male"
+              ?
               <img
                 className="w-40 h-40 rounded-full cursor-pointer"
-                src={userData.profilePic}
+                src={assets.maleGenderIcon}
                 alt=""
               />
+              :
+              (
+                userData.gender === "female"
+                ?
+                <img
+                className="w-40 h-40 rounded-full cursor-pointer"
+                src={assets.femaleGenderIcon}
+                alt=""
+                />
+                :
+                <img
+                  className="w-40 h-40 rounded-full cursor-pointer"
+                  src={userData.profilePic}
+                  alt=""
+                />
+              )
             )
           ) : editProfile ? (
             <img

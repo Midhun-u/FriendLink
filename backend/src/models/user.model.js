@@ -36,10 +36,10 @@ const userSchema = new Schema({
         type : Schema.Types.ObjectId,
         ref : "User"
     }],
-    blockUsers : {
-        type : Array,
-        default : []
-    },
+    blockUsers : [{
+        type : Schema.Types.ObjectId,
+        ref : "User"
+    }],
     lastMessages : {
         type : Array,
         default : []
@@ -54,35 +54,6 @@ const userSchema = new Schema({
     },
 
 } , {timestamps : true , minimize : true , versionKey : false})
-
-//mongoose middleware for hashing password
-userSchema.pre("save" , async function(next){
-
-    if(this.isModified("password") && this.password){
-
-        const salt = await bcrypt.genSalt(10) //generate salt
-        this.password = await bcrypt.hash(this.password , salt) //hashing password
-
-        next()
-    }else{
-        next()
-    }
-
-
-})
-
-//method for comparing password
-userSchema.methods.comparePassword = async function(candidatePassword){
-
-    if(candidatePassword){
-
-        const isPasswordCorrect = await bcrypt.compare(this.password , candidatePassword)
-
-        return isPasswordCorrect
-
-    }
-
-}
 
 const User = model("User" , userSchema)
 

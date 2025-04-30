@@ -91,7 +91,7 @@ export const changePassowordApi = async (newPassword , email) => {
 
 export const changeProfileApi = async (fullName , profilePic = null , gender , bio) => {
 
-    if(fullName && gender && bio){
+    if(fullName || gender || bio){
 
         const response = (await axiosInstance.put("/auth/changeProfile" , {fullName : fullName , profilePic : profilePic , gender : gender , bio : bio})).data
         return response

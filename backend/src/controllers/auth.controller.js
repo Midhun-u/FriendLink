@@ -2,6 +2,7 @@ import { generateToken } from "../config/generateToken.js"
 import User from "../models/user.model.js"
 import uploadAsset from "../config/cloudinary.js"
 import sendOtp from "../config/nodemailer.js"
+import { hashPassword , comparePassword} from "../utilities/hashPassword.js"
 
 //controller for sign
 export const signController = async (request , response) => {
@@ -21,12 +22,15 @@ export const signController = async (request , response) => {
 
             }else{
 
+                //hashing password before save
+                const hashedPassword = hashPassword(password)
+
                 if(password.length >= 6){
 
                     const newUser = await User.create({
                         fullName : fullName,
                         email : email,
-                        password : password.trim(),
+                        password : hashedPassword,
                         authType : "Email"
                     })
 
@@ -120,7 +124,7 @@ export const googleSignController = async (request ,response) => {
 }
 
 //controller for login
-export const loginController = async (request ,response ) => {
+export const loginController = async (request , response ) => {
 
     try{
 
@@ -134,7 +138,7 @@ export const loginController = async (request ,response ) => {
             if(user){
 
                 //check password is correct
-                const checkPassword = await user.comparePassword(password.trim())
+                const checkPassword = await comparePassword(password , user.password)
 
                 if(checkPassword){
 
@@ -313,8 +317,10 @@ export const changePasswordController = async (request , response) => {
 
             if(checkUser){
 
-                checkUser.password = newPassword
-                await checkUser.save()
+                const hashedPassword = hashPassword(newPassword)
+
+                checkUser.password = hashedPassword
+                checkUser.save()
 
                 response.status(200).json({success : true , message : "Password changed"})
 
@@ -341,7 +347,7 @@ export const changeProfileController = async (request , response) => {
         const {fullName , bio , gender , profilePic} = request.body
         const {id : userId} = request.user
 
-        if(fullName && bio && gender){
+        if(fullName || bio || gender){
 
             const user = await User.findOne({_id : userId})
 
