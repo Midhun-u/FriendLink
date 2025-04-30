@@ -70,7 +70,7 @@ export const sendMessageController = async (request , response) => {
                     User.updateOne({_id : receiverId} , {$push : {lastMessages : {$each : [createMessage] , $position : 0}}})
                 ])
 
-                response.status(201).json({success : true , message : "Message created"})
+                response.status(201).json({success : true , message : "Message created" , createdMessage : createMessage})
     
             }
         }else{

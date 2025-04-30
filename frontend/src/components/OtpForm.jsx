@@ -91,7 +91,7 @@ const OtpForm = ({ userEmail, otpDetails, setOtpDetails }) => {
       if (Date.now() > otpDetails.expireDate) {
         toast.error("OTP expire");
       } else if (otpDigits !== otpDetails.otpDigits) {
-        toast.error("OTP incorrect");
+        toast.error("Incorrect OTP");
       } else {
         toast.success("Success");
         setPasswordField(true);

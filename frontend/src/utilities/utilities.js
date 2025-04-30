@@ -29,7 +29,7 @@ export const decryptMessageFunction = (encryptedMessage) => {
 
     const decryptedMessage = bytes.toString(Crypto.enc.Utf8);
   
-    return decryptedMessage;
+    return decryptedMessage || encryptedMessage;
   }
 
   return 

@@ -10,6 +10,9 @@ import MessageScreen from "../components/MessageScreen";
 import { profileApi } from "../api/authApi";
 import AddedUsers from "../components/AddedUsers";
 import SearchUsers from "../components/SearchUsers";
+import {io} from 'socket.io-client'
+
+const socket = io("http://localhost:3000/")
 
 const Home = () => {
   const [messageScreen, setMessageScreen] = useState(false);
@@ -95,6 +98,7 @@ const Home = () => {
     }
   }
 
+
   return (
     <div className="w-screen h-screen flex flex-col lg:flex-row">
       <Sidebar />
@@ -147,6 +151,7 @@ const Home = () => {
             receiver={receiver}
             setReceiver={setReceiver}
             setMessageScreen={setMessageScreen}
+            socket={socket}
           />
         ) : (
           <div className="hidden ml-0.5 lg:grid w-full h-full bg-white place-items-center">

@@ -16,6 +16,7 @@ const MessageScreen = ({
   receiver,
   setReceiver,
   userProfile,
+  socket
 }) => {
   const [moreSection, setMoreSection] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -44,7 +45,8 @@ const MessageScreen = ({
             return [...preMessage , ...result.messages]
           }
 
-        });
+        })
+
         setTotalCount(result.totalCount);
       }
     } catch (error) {
@@ -82,6 +84,7 @@ const MessageScreen = ({
         if (result.success) {
           setInputValue("");
           setFile("")
+          socket.emit("send-message" , result.createdMessage)
         }
       } catch (error) {
         const errorMessage = error?.response.data
@@ -141,14 +144,28 @@ const MessageScreen = ({
 
 
   useEffect(() => {
+
     if (chatContainerRef.current) {
       chatContainerRef.current?.scrollTo({
         top: chatContainerRef.current.scrollHeight,
         behavior: "smooth",
-      });
+      })
     }
   }, [messages])
 
+  useEffect(() => {
+
+    socket.on("receive-message" , (messageData) => {
+
+      setMessages((preMessage) => [...preMessage , messageData])
+
+    })
+
+    return () => {
+      socket.off("receive-message")
+    }
+
+  } , [])
 
   return (
     <div className="grid grid-rows-[70px_1fr_70px] lg:grid-rows-[90px_1fr_90px] w-full h-full absolute overflow-scroll lg:relative">
@@ -244,7 +261,7 @@ const MessageScreen = ({
             <>
               <div
                 className={`w-full h-auto flex ${
-                  message.sender._id == userProfile._id
+                  message.sender._id == userProfile._id || message.sender == userProfile._id
                     ? "justify-end"
                     : "justify-start"
                 }`}
@@ -258,7 +275,7 @@ const MessageScreen = ({
                         sessionStorage.setItem("session" , JSON.stringify({mediaType : "image" , mediaURL : message.mediaURL , receiver : receiver}))
                         navigate(`/file`)
                       }} className="lg:w-40 lg:h-40 w-30 h-30 cursor-pointer" src={decryptMessageFunction(message.mediaURL)} alt="" />
-                    <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id ? "bg-white text-black" : "bg-[#39B1D9] text-white"}`} >{decryptMessageFunction(message.message)}</p>
+                    <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id || message.sender === userProfile._id? "bg-white text-black" : "bg-[#39B1D9] text-white"}`} >{decryptMessageFunction(message.message)}</p>
                   </div>
                   :
                   (
@@ -274,12 +291,12 @@ const MessageScreen = ({
                         </video>
                         <img className="absolute w-10 h-10" src={assets.videoPlayIcon} alt="" />
                       </div>
-                      <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id ? "bg-white text-black" : "bg-[#39B1D9] text-white"}`}>{decryptMessageFunction(message.message)}</p>
+                      <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id || message.sender === userProfile._id ? "bg-white text-black" : "bg-[#39B1D9] text-white"}`}>{decryptMessageFunction(message.message)}</p>
                     </div>
                     :
                     <div
                       className={`w-fit h-auto max-w-[50%] px-2 py-1 flex justify-center items-center ${
-                        message.sender._id == userProfile._id
+                        message.sender._id === userProfile._id || message.sender === userProfile._id
                           ? "bg-white text-black"
                           : "bg-[#39B1D9] text-white"
                       } rounded-md overflow-hidden`}
