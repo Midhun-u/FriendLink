@@ -11,6 +11,7 @@ import { useInView } from "react-intersection-observer";
 import { profileApi } from "../api/authApi";
 
 const People = () => {
+  
   const [page, setPage] = useState(1);
   const [peopleArr, setPeopleArr] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -82,7 +83,7 @@ const People = () => {
 
         if (result.success) {
           toast.success(result.message);
-          setRequestedUsers([...requestedUsers, personId]);
+          setRequestedUsers([...requestedUsers, personId])
         }
       }
     } catch (error) {

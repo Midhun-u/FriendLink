@@ -12,9 +12,10 @@ import AddedUsers from "../components/AddedUsers";
 import SearchUsers from "../components/SearchUsers";
 import {io} from 'socket.io-client'
 
-const socket = io("http://localhost:3000/")
+const socket = io(import.meta.env.VITE_SOCKET_CONNECTION_URL)
 
 const Home = () => {
+  
   const [messageScreen, setMessageScreen] = useState(false);
   const [addedUsers, setAddedUsers] = useState([]);
   const [searchUsers, setSearchUsers] = useState([]);
@@ -97,7 +98,6 @@ const Home = () => {
       setSearchUsers(filteredAddedUsers);
     }
   }
-
 
   return (
     <div className="w-screen h-screen flex flex-col lg:flex-row">

@@ -57,7 +57,7 @@ const AddedUsers = ({
                       (message) =>
                         message.sender === userProfile._id ||
                         message.receiver === userProfile._id,
-                    ).message || "File",
+                    ).message || "File", userProfile._id
                   )
                   : ""}
               </span>

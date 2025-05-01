@@ -10,8 +10,13 @@ import {
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { useInView } from "react-intersection-observer";
+import {useNavigate} from 'react-router'
+import {io} from 'socket.io-client'
+
+const socket = io(import.meta.env.SOCKET_CONNECTION_URL)
 
 const Notifications = () => {
+  
   const [page, setPage] = useState(1);
   const [notification, setNotification] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
@@ -22,7 +27,8 @@ const Notifications = () => {
     personId: "",
   });
   const [clearNotification, setClearNotification] = useState(false);
-  const { InView, ref } = useInView();
+  const { InView, ref } = useInView()
+  const navigate = useNavigate()
 
   //function for get notification
   const handleGetNotification = async () => {
@@ -53,6 +59,14 @@ const Notifications = () => {
   useEffect(() => {
     setPage((prePage) => prePage + 1);
   }, [InView]);
+  
+  useEffect(() => {
+    
+    socket.emit("receive-notification" , (notification) => {
+      console.log(notification)
+    })
+    
+  }, [])
 
   //functiong for adding user for chatting
   const handleAddUser = async (personId, index) => {

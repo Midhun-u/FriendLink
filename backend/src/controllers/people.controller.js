@@ -71,8 +71,10 @@ export const sendRequestController = async (request , response) => {
                     person.notifications.unshift(message)
                     user.requestedUsers.push(person._id)
 
-                    await person.save()
-                    await user.save()
+                    await Promise.all([
+                      person.save(),
+                      user.save()
+                    ])
 
                     response.status(200).json({success : true , message : "Request sent"})
                 }

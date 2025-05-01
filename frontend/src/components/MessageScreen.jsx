@@ -280,6 +280,7 @@ const MessageScreen = ({
                   :
                   (
                     message.mediaType === "video" && message.mediaURL
+                    
                     ?
                     <div className="w-fit h-auto max-w-[50%] px-2 py-1 flex flex-col gap-3 justify-center items-center overflow-hidden cursor-pointer">
                       <div onClick={() => {
