@@ -46,29 +46,31 @@ const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}
               {searchUser.fullName}
             </span>
             <span className="text-textColor">
-              {searchUser.lastMessages.length &&
-              Array.isArray(searchUser.lastMessages)
-                ? decryptMessageFunction(
-                    searchUser.lastMessages.find(
-                      (message) =>
-                        message.sender === userProfile._id ||
-                        message.receiver === userProfile._id
-                    ).message
-                  )
+              {Array.isArray(searchUser.lastMessages) && searchUser.lastMessages.length > 0
+                ? (() => {
+                  decryptMessageFunction(
+                      searchUser.lastMessages.find(
+                        (message) =>
+                          message.sender === userProfile._id ||
+                          message.receiver === userProfile._id
+                      )?.message || "File"
+                    )
+                })()
                 : ""}
             </span>
           </div>
           <div className="md:flex hidden lg:hidden justify-end xl:flex">
             <span className="text-textColor lg:text-md text-sm">
-              {searchUser.lastMessages.length &&
-              Array.isArray(searchUser.lastMessages)
-                ? getMessageTime(
-                    searchUser.lastMessages.find(
-                      (message) =>
-                        message.sender === userProfile._id ||
-                        message.receiver === userProfile._id
-                    ).createdAt
-                  )
+              {Array.isArray(searchUser.lastMessages && searchUser.lastMessages.length > 0)
+                ? (() => {
+                  getMessageTime(
+                      searchUser.lastMessages.find(
+                        (message) =>
+                          message.sender === userProfile._id ||
+                          message.receiver === userProfile._id
+                      )?.createdAt
+                    )
+                })()
                 : ""}
             </span>
           </div>

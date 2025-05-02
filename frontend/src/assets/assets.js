@@ -32,6 +32,8 @@ import closeImageIcon from './close_icon.png'
 import encryptIcon from './encrypted_icon.png'
 import videoPlayIcon from './video_play.png'
 import noUsersFoundIcon from './not-users-found.png'
+import removePersonIcon from './unfollow_icon.png'
+import cancelIcon from './cancel.png'
 
 const assets = {
     logo : logo,
@@ -67,7 +69,9 @@ const assets = {
     closeImageIcon : closeImageIcon,
     encryptIcon : encryptIcon,
     videoPlayIcon : videoPlayIcon,
-    noUsersFoundIcon : noUsersFoundIcon
+    noUsersFoundIcon : noUsersFoundIcon,
+    removePersonIcon : removePersonIcon,
+    cancelIcon : cancelIcon
 }
 
 export {assets}

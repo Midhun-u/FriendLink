@@ -15,3 +15,28 @@ export const sendRequest = async (personId) => {
     return response
 
 }
+
+//function for remove person 
+export const removePerson = async (personId) => {
+  
+  if(personId){
+    
+    const response = (await axiosInstance.delete(`/people/remove-person/${personId}`)).data
+    return response
+    
+  }
+  
+}
+
+//function for remove request
+export const removeRequest = async (personId) => {
+  
+  if(personId){
+    
+    const response = (await axiosInstance.delete(`/people/remove-request/${personId}`)).data
+    
+    return response
+    
+  }
+  
+}

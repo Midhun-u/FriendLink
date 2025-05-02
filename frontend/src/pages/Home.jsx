@@ -19,6 +19,7 @@ const Home = () => {
   const [messageScreen, setMessageScreen] = useState(false);
   const [addedUsers, setAddedUsers] = useState([]);
   const [searchUsers, setSearchUsers] = useState([]);
+  const [searchScreen , setSearchScreen] = useState(false)
   const [receiver, setReceiver] = useState();
   const [userProfile, setUserProfile] = useState();
   const [page, setPage] = useState(1);
@@ -96,6 +97,8 @@ const Home = () => {
         addedUser.fullName.includes(personName.trim())
       );
       setSearchUsers(filteredAddedUsers);
+      
+      if(filteredAddedUsers.length > 0) setSearchScreen(true)
     }
   }
 
@@ -123,7 +126,7 @@ const Home = () => {
             </div>
           </div>
           <div className="mt-15 lg:mt-30 flex flex-col items-center justify-start gap-2 px-2 md:px-5 w-full">
-            {searchUsers.length === 0 ? (
+            {!searchScreen ? (
               <AddedUsers
                 addedUsers={addedUsers}
                 setReceiver={setReceiver}

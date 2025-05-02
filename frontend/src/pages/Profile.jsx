@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { assets } from "../assets/assets";
+import { useNavigate } from "react-router";
 const Profile = () => {
   const [editProfile, setEditProfile] = useState(false);
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const Profile = () => {
     profilePic: "",
   });
   const imageRef = useRef();
+  const navigate = useNavigate()
 
   //function for get profile
   const handleGetProfile = async () => {
@@ -64,7 +66,6 @@ const Profile = () => {
         toast.success(result.message);
         setEditProfile(false);
       }
-      console.log(result)
     } catch (error) {
       const errorMessage = error?.response.data
             
@@ -126,7 +127,15 @@ const Profile = () => {
                   hidden
                 />
               </div>
-            ) : (
+            ) : <img className="w-40 h-40 rounded-full cursor-pointer" src={userData.profilePic} />
+          ) : editProfile ? (
+            <img
+              className="w-40 h-40 rounded-full cursor-pointer"
+              src={assets.nullProfilePic}
+              alt=""
+            />
+          ) : (
+            (
               userData.gender === "Male"
               ?
               <img
@@ -136,33 +145,31 @@ const Profile = () => {
               />
               :
               (
-                userData.gender === "female"
+                userData.gender === "Female"
                 ?
                 <img
-                className="w-40 h-40 rounded-full cursor-pointer"
-                src={assets.femaleGenderIcon}
-                alt=""
-                />
-                :
-                <img
                   className="w-40 h-40 rounded-full cursor-pointer"
-                  src={userData.profilePic}
+                  src={assets.femaleGenderIcon}
                   alt=""
                 />
+                :
+                (
+                  userData.profilePic
+                  ?
+                  <img
+                    className="w-40 h-40 rounded-full cursor-pointer"
+                    src={userData.profilePic}
+                    alt=""
+                  />
+                  :
+                  <img
+                    className="w-40 h-40 rounded-full cursor-pointer"
+                    src={assets.nullProfilePic}
+                    alt=""
+                  />
+                )
               )
             )
-          ) : editProfile ? (
-            <img
-              className="w-40 h-40 rounded-full cursor-pointer"
-              src={assets.nullProfilePic}
-              alt=""
-            />
-          ) : (
-            <img
-              className="w-40 h-40 rounded-full cursor-pointer"
-              src={assets.nullProfilePic}
-              alt=""
-            />
           )}
           {editProfile ? (
             <input

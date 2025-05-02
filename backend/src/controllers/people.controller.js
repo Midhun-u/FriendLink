@@ -47,7 +47,6 @@ export const sendRequestController = async (request , response) => {
 
         const {id : personId} = request.params
         const {id : userId} = request.user
-
         
         if(personId && userId){
 
@@ -94,4 +93,85 @@ export const sendRequestController = async (request , response) => {
 
     }
 
+}
+
+//controller for remove person
+export const removePersonController = async (request , response) => {
+  
+  try{
+    
+    const {personId} = request.params
+    const {id : userId} = request.user
+    
+    if(personId && userId){
+      
+      const user = await User.findOne({_id : userId})
+      
+      const filteredAddedUsers = user.addedUsers.filter(addedUsersId => addedUsersId != personId) || []
+      const filteredLastMessages = user.lastMessages.filter(messages => messages.sender != personId && messages.receiver != personId) || []
+      
+      user.addedUsers = filteredAddedUsers
+      user.lastMessages = filteredLastMessages
+      await user.save()
+      
+      response.status(200).json({ success: true, message : "Person removed"})
+      
+    }
+    
+  }catch(error){
+    
+    response.status(500).json({error : "Server error"})
+    console.log("removePerson controller error : " + error)
+    
+  }
+  
+}
+
+//controller for remove request
+export const removeRequestController = async (request , response) => {
+  
+  try{
+    
+    const {personId} = request.params
+    const {id : userId} = request.user
+    
+    if(personId && userId){
+      
+      const [person , user] = await Promise.all([
+        User.findOne({_id : personId}),
+        User.findOne({_id : userId})
+      ])
+      
+      const check = user.requestedUsers.includes(personId)
+      
+      if(check){
+        
+        const filteredRequest = user.requestedUsers.filter(requestUsersId => requestUsersId != personId)
+        const filteredNotifications = person.notifications.filter(notifications => notifications.person._id != userId)
+        
+        user.requestedUsers = filteredRequest
+        person.notifications = filteredNotifications
+        
+        await Promise.all([
+          user.save(),
+          person.save()
+        ])
+        
+        response.status(200).json({success : true , message : "Request cancelled"})
+        
+      }else{
+        
+        response.status(400).json({success : false , message : "Already removed"})
+        
+      }
+      
+    }
+    
+  }catch(error){
+    
+    response.status(500).json({error : "Server error"})
+    console.log("removeRequest controller error : " + error)
+    
+  }
+  
 }

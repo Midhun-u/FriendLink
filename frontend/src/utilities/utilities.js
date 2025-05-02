@@ -19,7 +19,7 @@ export const encryptMessageFunction = (messageForEncrypt) => {
 
 //function for decrypt message
 export const decryptMessageFunction = (encryptedMessage) => {
-
+  
   if(encryptedMessage){
 
     const bytes = Crypto.AES.decrypt(
@@ -32,7 +32,7 @@ export const decryptMessageFunction = (encryptedMessage) => {
     return decryptedMessage || encryptedMessage;
   }
 
-  return 
+  return ""
 
 };
 

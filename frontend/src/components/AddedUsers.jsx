@@ -51,27 +51,30 @@ const AddedUsers = ({
               <span
                 className={`text-textColor h-auto max-h-12 overflow-hidden`}
               >
-                {user.lastMessages.length && Array.isArray(user.lastMessages)
-                  ? decryptMessageFunction(
-                    user.lastMessages.find(
-                      (message) =>
-                        message.sender === userProfile._id ||
-                        message.receiver === userProfile._id,
-                    ).message || "File", userProfile._id
-                  )
+                {Array.isArray(user.lastMessages) && user.lastMessages?.length > 0 
+                  ? 
+                    decryptMessageFunction(
+                      user.lastMessages.find(
+                        (message) =>
+                          message.sender === userProfile._id ||
+                          message.receiver === userProfile._id,
+                      )?.message || "File"
+                    )
+                   
                   : ""}
               </span>
             </div>
             <div className="flex justify-end w-20 absolute right-2 top-4">
               <span className="text-textColor lg:text-md text-sm">
-                {user.lastMessages.length && Array.isArray(user.lastMessages)
-                  ? getMessageTime(
-                    user.lastMessages.find(
-                      (message) =>
-                        message.sender === userProfile._id ||
-                        message.receiver === userProfile._id,
-                    ).createdAt,
-                  )
+                {Array.isArray(user.lastMessages) && user.lastMessages.length > 0
+                  ?
+                    getMessageTime(
+                      user.lastMessages.find(
+                        (message) =>
+                          message.sender === userProfile._id ||
+                          message.receiver === userProfile._id,
+                      )?.createdAt,
+                    )
                   : ""}
               </span>
             </div>

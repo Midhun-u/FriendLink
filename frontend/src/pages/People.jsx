@@ -9,6 +9,7 @@ import Loader from "../components/Loader";
 import { useNavigate } from "react-router";
 import { useInView } from "react-intersection-observer";
 import { profileApi } from "../api/authApi";
+import ViewProfile from "../components/ViewProfile";
 
 const People = () => {
   
@@ -21,6 +22,8 @@ const People = () => {
   const { ref, inView } = useInView();
   const [requestedUsers, setRequestedUsers] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
+  const [profileScreen , setProfileScreen] = useState(false)
+  const [person , setPerson] = useState()
 
   //function for getUser requested users
   const getUser = async () => {
@@ -132,13 +135,23 @@ const People = () => {
   }, [inView]);
 
   return (
-    <div className="w-screen h-screen flex flex-col lg:flex-row overflow-hidden">
+    <div className="w-screen h-screen flex flex-col lg:flex-row overflow-hidden relative">
       <Sidebar />
       {loading ? (
         <div className="w-full h-full flex justify-center items-center">
           <Loader />
         </div>
       ) : (
+        <>
+          {
+            profileScreen
+            ?
+            <div className="w-screen h-screen bg-white/55 absolute z-10 flex justify-center items-center">
+              <ViewProfile person={person} setProfileScreen={setProfileScreen} setRequestedUsers={setRequestedUsers} requestedUsers={requestedUsers} />
+            </div>
+            :
+            null
+          }
         <div className="w-full h-full px-5 overflow-y-scroll bg-gray-100">
           <div className="w-full h-40 flex flex-col items-start justify-center gap-6">
             <h1 className="lg:text-xl">People</h1>
@@ -161,6 +174,10 @@ const People = () => {
               <div
                 className="w-35 cursor-pointer min-h-20 lg:w-50 bg-white rounded-lg flex justify-start py-5 flex-col items-center px-2 relative gap-5"
                 key={index}
+                onClick={() => {
+                  setPerson(person)
+                  setProfileScreen(true)
+                }}
               >
                 <div>
                   {person.profilePic ? (
@@ -199,7 +216,8 @@ const People = () => {
                 </div>
                 <div className="w-full flex justify-center px-2">
                   {requestedUsers.includes(person._id) ? (
-                    <button className="flex mt-2 justify-center cursor-pointer items-center bg-gray-50 w-full h-auto py-1 gap-2">
+                    <button className={`flex mt-2 ${!person.bio ? "mt-0 bottom-5 w-[80%] absolute" : "w-full"} justify-center cursor-pointer items-center bg-gray-50 h-auto py-1 gap-2`}
+                    >
                       <img
                         className="w-5 h-5 lg:w-6 lg:h-6"
                         src={assets.doneIcon}
@@ -216,7 +234,7 @@ const People = () => {
                         );
                         navigate("/");
                       }}
-                      className="flex mt-2 justify-center items-center cursor-pointer bg-gray-50 w-full h-auto py-1 gap-2"
+                      className={`flex mt-2 justify-center ${!person.bio ? "absolute bottom-5 w-[90%]" : "w-full"} items-center cursor-pointer bg-gray-50 h-auto py-1 gap-2`}
                     >
                       <img
                         className="w-5 h-5 lg:w-8 lg:h-8"
@@ -228,7 +246,7 @@ const People = () => {
                   ) : (
                     <button
                       onClick={() => handleSendRequest(person._id, person)}
-                      className="flex mt-2 justify-center cursor-pointer items-center bg-gray-50 w-[95%] h-auto py-1 gap-2"
+                      className={`flex mt-2 ${!person.bio ? "absolute bottom-5 mt-0 w-[80%]" : "w-[95%]"} justify-center cursor-pointer items-center bg-gray-50 h-auto py-1 gap-2`}
                     >
                       <img
                         className="w-5 h-5 lg:w-8 lg:h-8 "
@@ -251,6 +269,7 @@ const People = () => {
             )}
           </div>
         </div>
+        </>
       )}
     </div>
   );
