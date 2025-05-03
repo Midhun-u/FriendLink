@@ -1,5 +1,4 @@
 import {Schema , model} from 'mongoose'
-import bcrypt from 'bcrypt'
 
 const userSchema = new Schema({
 
@@ -36,7 +35,7 @@ const userSchema = new Schema({
         type : Schema.Types.ObjectId,
         ref : "User"
     }],
-    blockUsers : [{
+    blockedUsers : [{
         type : Schema.Types.ObjectId,
         ref : "User"
     }],

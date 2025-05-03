@@ -7,7 +7,7 @@ import {sendRequest , removeRequest , removePerson} from '../api/peopleApi'
 
 const ViewProfile = ({person , setProfileScreen , setRequestedUsers , requestedUsers}) => {
   
-  const navigate = useNavigate()
+  const navigate = useNavigate() 
   const [profile , setProfile] = useState()
   const [removeScreen , setRemoveScreen] = useState()
   

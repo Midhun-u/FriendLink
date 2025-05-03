@@ -101,6 +101,15 @@ export const getMessageController = async (request , response) => {
 
         if(receiverId && userId){
 
+            const [receiver , user] = await Promise.all([
+                User.findOne({_id : receiverId}),
+                User.findOne({_id : userId})
+            ])
+
+            if(receiver.blockedUsers.includes(userId) || user.blockedUsers.includes(receiverId)){
+                return response.status(400).json({success : false , blocked : true , message : "Blocked"})
+            }
+
             const messages = await Message.find({
 
                 $or : [

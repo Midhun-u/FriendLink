@@ -34,6 +34,7 @@ import videoPlayIcon from './video_play.png'
 import noUsersFoundIcon from './not-users-found.png'
 import removePersonIcon from './unfollow_icon.png'
 import cancelIcon from './cancel.png'
+import unBlockIcon from './unblock.png'
 
 const assets = {
     logo : logo,
@@ -71,7 +72,8 @@ const assets = {
     videoPlayIcon : videoPlayIcon,
     noUsersFoundIcon : noUsersFoundIcon,
     removePersonIcon : removePersonIcon,
-    cancelIcon : cancelIcon
+    cancelIcon : cancelIcon,
+    unBlockIcon : unBlockIcon
 }
 
 export {assets}

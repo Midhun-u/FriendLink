@@ -40,3 +40,29 @@ export const removeRequest = async (personId) => {
   }
   
 }
+
+//function for block user
+export const blockUser = async (personId) => {
+
+  if(personId){
+
+    const response = (await axiosInstance.post(`/people/block-user/${personId}`)).data
+
+    return response
+
+  }
+
+}
+
+//function for unblock user
+export const unblockUser = async (personId) => {
+
+  if(personId){
+
+    const response = (await axiosInstance.post(`/people/unblock-user/${personId}`)).data
+
+    return response
+
+  }
+
+}

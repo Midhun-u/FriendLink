@@ -175,3 +175,68 @@ export const removeRequestController = async (request , response) => {
   }
   
 }
+
+//controller for block user
+export const blockUserController = async (request , response) => {
+
+  try{
+
+    const {personId} = request.params
+    const {id : userId} = request.user
+
+    if(personId && userId){
+
+      const user = await User.findOne({_id : userId})
+
+      user.blockedUsers.unshift(personId)
+      await user.save()
+
+      response.status(200).json({success : true , message : "Person blocked"})
+    }
+
+  }catch(error){
+
+    response.status(500).json({error : "Server error"})
+    console.log("blockUser controller error : " + error)
+
+  }
+
+}
+
+//controller for unblock user
+export const unblockUserController = async (request , response) => {
+
+  try{
+
+    const {id : userId} = request.user
+    const {personId} = request.params 
+
+    if(userId && personId){
+
+      const user = await User.findOne({_id : userId})
+
+      if(user){
+
+        const filteredBlockedUsers = user.blockedUsers.filter(blockUsersId => blockUsersId != personId) || []
+
+        user.blockedUsers = filteredBlockedUsers
+        await user.save()
+
+        response.status(200).json({success : true , message : "Unblocked"})
+
+      }else{
+
+        response.status(400).json({success : false , message : "User not found"})
+
+      }
+
+    }
+
+  }catch(error){
+
+    response.status(500).json({error : "Server error"})
+    console.log("unblockUser controller error : " + error)
+
+  }
+
+}
