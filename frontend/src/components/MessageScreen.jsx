@@ -285,8 +285,8 @@ const MessageScreen = ({
             />
             <img
               onClick={() => setMoreSection(!moreSection)}
-              className="w-7 h-7 lg:w-10 lg:h-10 cursor-pointer"
-              src={assets.moreIcon}
+              className={`${moreSection ? "w-4 h-4 lg:w-5 lg:h-5" : "w-7 h-7 lg:w-10 lg:h-10 "} cursor-pointer`}
+              src={moreSection ? assets.closeIcon : assets.moreIcon}
               alt=""
               title="More"
             />
