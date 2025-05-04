@@ -181,7 +181,7 @@ const Login = () => {
                 src={assets.googleImg}
                 alt=""
               />
-              <span className="text-sm lg:text-xl">Login with google</span>
+              <span className="text-sm lg:text-xl">Login with Google</span>
             </button>
             <button
               className="cursor-pointer bg-secondary py-3 text-white w-full text-sm rounded lg:text-xl lg:py-5 lg:mt-2"

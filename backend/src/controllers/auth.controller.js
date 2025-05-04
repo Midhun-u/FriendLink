@@ -397,3 +397,60 @@ export const changeProfileController = async (request , response) => {
     }
 
 }
+
+//controller for change current password
+export const changeCurrentPasswordController = async (request ,response) => {
+
+    try{
+
+        const {currentPassword , newPassword} = request.body
+        const {id : userId} = request.user
+
+        if(currentPassword && newPassword){
+
+            if(newPassword.length >= 6){
+                
+                const user = await User.findOne({_id : userId , authType : "Email"})
+                
+                if(user){
+    
+                    const checkPassword = await comparePassword(currentPassword , user.password) //check password
+                    
+                    if(checkPassword){
+    
+                        const hashedPassword = await hashPassword(newPassword) //hashing password
+                        const updatePassword = await User.updateOne({_id : userId} , {password : hashedPassword})
+    
+                        if(updatePassword.acknowledged && updatePassword.modifiedCount){
+    
+                            response.status(200).json({success : true , message : "Password is changed"})
+    
+                        }
+    
+                    }else{
+    
+                        response.status(400).json({success : false , message : "Password is incorrect"})
+    
+                    }
+    
+                }else{
+                    response.status(400).json({success : false , message : "User not found"})
+                }
+            }else{
+                response.status(400).json({success : false , message : "Password must be 6 letters or above"})
+            }
+
+        }else{
+
+            response.status(400).json({success : false, message : "Fields are missing"})
+
+        }
+
+    }catch(error){
+
+        response.status(500).json({error : "Server error"})
+        console.log("changeCurrentPassword controller error : " + error)
+
+    }
+
+}

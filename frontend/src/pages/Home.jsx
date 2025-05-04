@@ -11,11 +11,13 @@ import { profileApi } from "../api/authApi";
 import AddedUsers from "../components/AddedUsers";
 import SearchUsers from "../components/SearchUsers";
 import {io} from 'socket.io-client'
+import {useSelector} from 'react-redux'
 
 const socket = io(import.meta.env.VITE_SOCKET_CONNECTION_URL)
 
 const Home = () => {
   
+  const {theme} = useSelector(state => state.theme)
   const [messageScreen, setMessageScreen] = useState(false);
   const [addedUsers, setAddedUsers] = useState([]);
   const [searchUsers, setSearchUsers] = useState([]);
@@ -106,15 +108,15 @@ const Home = () => {
     <div className="w-screen h-screen flex flex-col lg:flex-row">
       <Sidebar />
       <div className="w-full h-screen grid xl:grid-cols-[500px_1fr] lg:grid-cols-[350px_1fr]">
-        <div className="w-full h-full overflow-y-scroll overflow-x-hidden bg-gray-100">
+        <div className={`w-full h-full overflow-y-scroll overflow-x-hidden ${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"}`}>
           <div className="w-full h-20 p-4 lg:p-10 flex flex-col gap-7">
-            <h1 className="lg:text-xl">
+            <h1 className={`lg:text-xl ${theme === "dark" ? "text-white" : "text-black"}`}>
               Chats(<span className="text-primary">{addedUsers.length}</span>)
             </h1>
             <div className="w-full h-auto flex items-center relative">
               <input
                 onChange={(event) => handleSeachAddedUsers(event.target.value)}
-                className="w-full h-10  lg:h-10  focus:border-1 border-primary outline-none pl-10 pr-5 bg-white rounded-md"
+                className={`w-full h-10  lg:h-10  focus:border-1 border-primary outline-none pl-10 pr-5 ${theme === "dark" ? "bg-blackForeground placeholder-white text-white" : "bg-white placeholder-black text-black"} rounded-md `}
                 type="text"
                 placeholder="Search"
               />
@@ -157,14 +159,14 @@ const Home = () => {
             socket={socket}
           />
         ) : (
-          <div className="hidden ml-0.5 lg:grid w-full h-full bg-white place-items-center">
+          <div className={`hidden lg:grid w-full h-full ${theme === "dark" ? "bg-blackForeground" : "bg-white"} place-items-center`}>
             <div className="flex flex-col items-center">
               <img
                 className="w-40 h-40 xl:w-50 xl:h-50 "
                 src={assets.chatIcon}
                 alt=""
               />
-              <p className="mt-3 lg:text-xl">
+              <p className={`mt-3 lg:text-xl ${theme === "dark" ? "text-white" : "text-black"}`}>
                 You’ve found your place. Let’s get started.
               </p>
             </div>

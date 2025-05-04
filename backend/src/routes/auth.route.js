@@ -1,5 +1,5 @@
 import express from 'express'
-import { signController , googleSignController, loginController , logoutController, profileController, googleLoginController, sendOtpController, changePasswordController, changeProfileController} from '../controllers/auth.controller.js'
+import { signController , googleSignController, loginController , logoutController, profileController, googleLoginController, sendOtpController, changePasswordController, changeProfileController, changeCurrentPasswordController} from '../controllers/auth.controller.js'
 import { protectMiddleware } from '../middlewares/protectMiddleware.js'
 const authRoute = express.Router()
 
@@ -29,5 +29,8 @@ authRoute.put("/change-password" , changePasswordController)
 
 //route for changing profile
 authRoute.put("/changeProfile" , protectMiddleware , changeProfileController)
+
+//route for change password with current password
+authRoute.put("/change-currentPassword" , protectMiddleware , changeCurrentPasswordController)
 
 export {authRoute}

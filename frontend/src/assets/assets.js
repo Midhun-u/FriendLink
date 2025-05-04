@@ -35,6 +35,10 @@ import noUsersFoundIcon from './not-users-found.png'
 import removePersonIcon from './unfollow_icon.png'
 import cancelIcon from './cancel.png'
 import unBlockIcon from './unblock.png'
+import changePasswordIcon from './change_password_icon.png'
+import changeThemeIcon from './change_theme_icon.png'
+import blockedUsersIcon from './blocked_users.png'
+import deleteAccountIcon from './delete_account.png'
 
 const assets = {
     logo : logo,
@@ -73,7 +77,11 @@ const assets = {
     noUsersFoundIcon : noUsersFoundIcon,
     removePersonIcon : removePersonIcon,
     cancelIcon : cancelIcon,
-    unBlockIcon : unBlockIcon
+    unBlockIcon : unBlockIcon,
+    changePasswordIcon : changePasswordIcon,
+    changeThemeIcon : changeThemeIcon,
+    blockedUsersIcon : blockedUsersIcon,
+    deleteAccountIcon : deleteAccountIcon
 }
 
 export {assets}

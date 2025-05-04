@@ -12,6 +12,7 @@ import EmojiPicker from 'emoji-picker-react'
 import { useNavigate } from "react-router";
 import ViewProfile from "./ViewProfile";
 import { blockUser, unblockUser } from "../api/peopleApi";
+import { useSelector } from 'react-redux'
 
 const MessageScreen = ({
   setMessageScreen,
@@ -20,6 +21,8 @@ const MessageScreen = ({
   userProfile,
   socket
 }) => {
+
+  const { theme } = useSelector(state => state.theme)
   const [moreSection, setMoreSection] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
@@ -206,11 +209,11 @@ const MessageScreen = ({
   //function for unblock
   const handleUnBlockUser = async (personId) => {
 
-    try{
+    try {
 
       const result = await unblockUser(personId)
-      
-      if(result.success){
+
+      if (result.success) {
 
         toast.success(result.message)
         setMoreSection(false)
@@ -218,7 +221,7 @@ const MessageScreen = ({
 
       }
 
-    }catch(error){
+    } catch (error) {
 
       const errorMessage = error?.response.data
 
@@ -236,9 +239,12 @@ const MessageScreen = ({
 
   return (
     <>
-      <div className="grid grid-rows-[70px_1fr_70px] lg:grid-rows-[90px_1fr_90px] w-full h-full absolute overflow-scroll lg:relative">
-        <div className="w-full h-full bg-white grid grid-cols-[1fr_100px] px-2 lg:px-5 rounded-md relative">
-          <div className="grow w-full h-full flex justify-start items-center lg:px-5 overflow-hidden cursor-pointer gap-4">
+      <div className={`grid grid-rows-[70px_1fr_70px] lg:grid-rows-[90px_1fr_90px] w-full h-full absolute overflow-scroll lg:relative ${theme === "dark" ? "bg-blackBackground" : "bg-white"} `}>
+        <div className={`w-full h-full grid grid-cols-[1fr_100px] px-2 lg:px-5 rounded-md ${theme === "dark" ? "bg-blackForeground" : "bg-white"}  relative`}>
+          <div onClick={() => {
+            setProfileScreen(true)
+            setMoreSection(false)
+          }} className="grow w-full h-full flex justify-start items-center lg:px-5 overflow-hidden cursor-pointer gap-4">
             <img
               onClick={() => {
                 setMessageScreen(false);
@@ -268,7 +274,7 @@ const MessageScreen = ({
               />
             )}
             <div className="flex flex-col items-start">
-              <span className="lg:text-lg">{receiver.fullName}</span>
+              <span className={`lg:text-lg ${theme === "dark" ? "text-white" : "text-black"}`}>{receiver.fullName}</span>
               {receiver.online ? (
                 <span className="text-green-600 text-sm">Online</span>
               ) : (
@@ -291,35 +297,35 @@ const MessageScreen = ({
               title="More"
             />
             {moreSection ? (
-              <div className="w-50 h-auto absolute top-24 right-10 flex flex-col items-center bg-white rounded-md z-10">
+              <div className={`w-50 h-auto absolute top-24 right-10 flex flex-col items-center ${theme === "dark" ? "bg-blackForeground" : "bg-white"} rounded-md z-10`}>
                 {
                   blockedMessage
-                  ?
-                  <div onClick={() => handleUnBlockUser(receiver._id)} className="w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:bg-gray-200 px-5">
-                    <img className="w-7 h-7 lg:w-10 lg:h-10" src={assets.unBlockIcon} alt="" />
-                    <span>Unblock</span>
-                  </div>
-                  :
-                  <div onClick={() => handleBlockUser(receiver._id)} className="w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:bg-gray-200 px-5">
-                    <img
-                      className="w-7 h-7 lg:w-10 lg:h-10"
-                      src={assets.blockIcon}
-                      alt=""
-                    />
-                    <span>Block</span>
-                  </div>
+                    ?
+                    <div onClick={() => handleUnBlockUser(receiver._id)} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} px-5`}>
+                      <img className="w-7 h-7 lg:w-10 lg:h-10" src={assets.unBlockIcon} alt="" />
+                      <span className={`${theme === "dark" ? "text-white" : "text-black"}`}>Unblock</span>
+                    </div>
+                    :
+                    <div onClick={() => handleBlockUser(receiver._id)} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-white"} px-5`}>
+                      <img
+                        className="w-7 h-7 lg:w-10 lg:h-10"
+                        src={assets.blockIcon}
+                        alt=""
+                      />
+                      <span className={`${theme === "dark" ? "text-white" : "text-black"}`}>Block</span>
+                    </div>
 
                 }
                 <div onClick={() => {
                   setProfileScreen(true)
                   setMoreSection(false)
-                }} className="w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:bg-gray-300 px-5">
+                }} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-white"} px-5`}>
                   <img
                     className="w-7 h-7 lg:w-10 lg:h-10"
                     src={assets.viewProfileIcon}
                     alt=""
                   />
-                  <span>View Profile</span>
+                  <span className={`${theme === "dark" ? "text-white" : "text-black"}`}>View Profile</span>
                 </div>
               </div>
             ) : null}
@@ -331,11 +337,11 @@ const MessageScreen = ({
             setMoreSection(false)
             setEmoji(false)
           }}
-          className="w-full h-full bg-gray-100 overflow-scroll px-3 py-2 flex flex-col gap-5"
+          className={`w-full h-full ${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} overflow-scroll px-3 py-2 flex flex-col gap-5`}
         >
           <div className="w-full h-auto flex justify-center items-center relative gap-3">
             <img className="w-5 h-5 relative top-2" src={assets.encryptIcon} alt="" />
-            <p className="text-sm mt-4 px-2 bg-gray-200">Messages are end-to-end encrypted. No one outside of this chat</p>
+            <p className={`text-sm mt-4 px-2 ${theme === "dark" ? "text-white" : "text-black"}`}>Messages are end-to-end encrypted. No one outside of this chat</p>
           </div>
           {messages?.length ? (
             messages?.map((message, index) => (
@@ -386,27 +392,26 @@ const MessageScreen = ({
                             </p>
                           </div>
                       )
-
                   }
                 </div>
               </>
             ))
           ) : (
             blockedMessage
-            ?
-            <div className="w-full h-full bg-inherit flex flex-col justify-center items-center gap-3">
-              <img className="w-15 h-15 lg:w-20 lg:h-20" src={assets.blockIcon} alt="" />
-              <span>Can't send message</span>
-            </div>
-            :
-            <div className="w-full h-full bg-inherit flex flex-col justify-center items-center gap-3">
-              <img
-                className="w-15 h-15 lg:w-20 lg:h-20 "
-                src={assets.messageIcon}
-                alt=""
-              />
-              <span className="lg:text-lg md:text-md text-sm">Let's Chat</span>
-            </div>
+              ?
+              <div className="w-full h-full bg-inherit flex flex-col justify-center items-center gap-3">
+                <img className="w-15 h-15 lg:w-20 lg:h-20" src={assets.blockIcon} alt="" />
+                <span className={`${theme === "dark" ? "text-white" : "text-black"}`}>Can't send message</span>
+              </div>
+              :
+              <div className="w-full h-full bg-inherit flex flex-col justify-center items-center gap-3">
+                <img
+                  className="w-15 h-15 lg:w-20 lg:h-20 "
+                  src={assets.messageIcon}
+                  alt=""
+                />
+                <span className={`lg:text-lg md:text-md text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>Let's Chat</span>
+              </div>
           )}
           {
             messages?.length < totalCount
@@ -418,8 +423,13 @@ const MessageScreen = ({
               null
           }
         </div>
-        <div className="w-full h-full bg-gray-100 flex justify-center items-center">
-          <div className={`w-[95%] h-[90%] rounded-md ${blockedMessage ? "bg-gray-100" : "bg-white"} grid grid-cols-[auto_1fr_auto] content-center px-3 relative`}>
+        <div className={`w-full h-full ${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} flex justify-center items-center`}>
+          {
+            blockedMessage
+            ?
+            null
+            :
+            <div className={`w-[95%] h-[90%] rounded-md ${theme === "dark" ? "bg-blackForeground" : "bg-white"} grid grid-cols-[auto_1fr_auto] content-center px-3 relative`}>
             {
               file
                 ?
@@ -446,7 +456,7 @@ const MessageScreen = ({
                   emoji
                     ?
                     <div className="w-full h-113 absolute bottom-25 z-10 flex md:justify-end justify-center md:px-0 px-3">
-                      <EmojiPicker onEmojiClick={(emojiEvent) => setInputValue((preInputValue) => preInputValue + emojiEvent.emoji)} style={{ position: "absolute", bottom: "0px" }} />
+                      <EmojiPicker theme={theme === "dark" ? "dark" : "white"} onEmojiClick={(emojiEvent) => setInputValue((preInputValue) => preInputValue + emojiEvent.emoji)} style={{ position: "absolute", bottom: "0px" }} />
                     </div>
                     :
                     null
@@ -454,62 +464,63 @@ const MessageScreen = ({
             }
             {
               blockedMessage
-              ?
-              null
-              :
-              (
-                <>
-                  <div className="h-full flex items-center">
-                    <img
-                      onClick={() => {
-                        setEmoji(false)
-                        imageRef.current?.click()
-                      }}
-                      className="w-8 h-8 lg:w-10 lg:h-10 cursor-pointer"
-                      title="File"
-                      src={assets.addFileIcon}
-                      alt=""
-                    />
-                    <input onChange={(event) => handleSetFile(event.target.files[0])} ref={imageRef} type="file" hidden />
-                  </div>
-                  <div className="w-full px-5 flex items-center h-full relative">
-                    <textarea
-                      value={inputValue}
-                      onFocus={() => setEmoji(false)}
-                      onChange={(event) => setInputValue(event.target.value)}
-                      className="resize-none w-full h-full outline-none pl-5 pr-13"
-                      placeholder="Enter your message here"
-                    ></textarea>
-                    <img
-                      onClick={() => setEmoji(!emoji)}
-                      className="w-6 h-6 lg:w-8 lg:h-8 rounde-full absolute right-7 cursor-pointer"
-                      title="Emoji"
-                      src={assets.emojiIcon}
-                      alt=""
-                    />
-                  </div>
-                  <div className="w-full h-full flex items-center">
-                    <img
-                      onClick={() => {
-
-                        if (disableButton) {
+                ?
+                null
+                :
+                (
+                  <>
+                    <div className="h-full flex items-center">
+                      <img
+                        onClick={() => {
                           setEmoji(false)
-                        } else {
-                          setEmoji(false)
-                          handleSendMessage()
-                        }
+                          imageRef.current?.click()
+                        }}
+                        className="w-8 h-8 lg:w-10 lg:h-10 cursor-pointer"
+                        title="File"
+                        src={assets.addFileIcon}
+                        alt=""
+                      />
+                      <input onChange={(event) => handleSetFile(event.target.files[0])} ref={imageRef} type="file" hidden />
+                    </div>
+                    <div className="w-full px-5 flex items-center h-full relative">
+                      <textarea
+                        value={inputValue}
+                        onFocus={() => setEmoji(false)}
+                        onChange={(event) => setInputValue(event.target.value)}
+                        className={`resize-none w-full h-full outline-none pl-5 pr-13 ${theme === "dark" ? "text-white placeholder-white" : "text-black"}`}
+                        placeholder="Enter your message here"
+                      ></textarea>
+                      <img
+                        onClick={() => setEmoji(!emoji)}
+                        className="w-6 h-6 lg:w-8 lg:h-8 rounde-full absolute right-7 cursor-pointer"
+                        title="Emoji"
+                        src={assets.emojiIcon}
+                        alt=""
+                      />
+                    </div>
+                    <div className="w-full h-full flex items-center">
+                      <img
+                        onClick={() => {
 
-                      }}
-                      title="Send"
-                      className="w-8 -8 lg:w-10 lg:h-10 cursor-pointer"
-                      src={assets.messageSendIcon}
-                      alt=""
-                    />
-                  </div>
-                </>
-              )
+                          if (disableButton) {
+                            setEmoji(false)
+                          } else {
+                            setEmoji(false)
+                            handleSendMessage()
+                          }
+
+                        }}
+                        title="Send"
+                        className="w-8 -8 lg:w-10 lg:h-10 cursor-pointer"
+                        src={assets.messageSendIcon}
+                        alt=""
+                      />
+                    </div>
+                  </>
+                )
             }
           </div>
+          }
         </div>
       </div>
       {

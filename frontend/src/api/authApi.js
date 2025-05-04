@@ -99,3 +99,14 @@ export const changeProfileApi = async (fullName , profilePic = null , gender , b
     }
 
 }
+
+export const changeCurrentPassword = async (currentPassword , newPassword) => {
+
+    if(currentPassword && newPassword){
+       
+        const response = (await axiosInstance.put("/auth/change-currentPassword" , {currentPassword : currentPassword , newPassword : newPassword})).data
+        return response
+
+    }
+
+}

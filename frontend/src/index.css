@@ -5,6 +5,8 @@
     --color-primary : #8813E4;
     --color-secondary : #253BCD;
     --color-textColor : #9F9F9F;
+    --color-blackBackground : #28282B;
+    --color-blackForeground : #000000;
 }
 
 *{

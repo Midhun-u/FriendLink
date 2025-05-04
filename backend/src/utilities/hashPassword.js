@@ -17,11 +17,11 @@ export const hashPassword = async (password) => {
 }
 
 //function for check password correct
-export const comparePassword = async (candidatePassword , hashedPassword) => {
+export const comparePassword = async (painTextPassword , hashedPassword) => {
 
-    if(candidatePassword){
+    if(painTextPassword){
 
-        const isPasswordCorrect = await compare(candidatePassword , hashedPassword)
+        const isPasswordCorrect = await compare(painTextPassword , hashedPassword)
         return isPasswordCorrect
 
     }
