@@ -10,6 +10,26 @@ const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}
 
   const {theme} = useSelector(state => state.theme)
 
+  //function for get last message
+  const getLatestMessages = (lastMessages = []) => {
+
+    if (Array.isArray(lastMessages) && lastMessages.length > 0) {
+
+      return decryptMessageFunction(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id,)?.message || lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.mediaType) || ""
+
+    }
+
+  }
+
+  //function for get time
+  const getLatestMessageTime = (lastMessages = []) => {
+
+    if (Array.isArray(lastMessages) && lastMessages.length > 0) {
+      return getMessageTime(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.createdAt || "")
+    }
+
+  }
+
   return (
     <>
       {searchUsers?.map((searchUser, index) => (
@@ -54,30 +74,12 @@ const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}
               {searchUser.fullName}
             </span>
             <span className="text-textColor">
-              {Array.isArray(searchUser.lastMessages) && searchUser.lastMessages.length > 0
-                ?
-                  decryptMessageFunction(
-                      searchUser.lastMessages.find(
-                        (message) =>
-                          message.sender === userProfile._id ||
-                          message.receiver === userProfile._id
-                      )?.message || "File"
-                    )
-                : ""}
+              {getLatestMessages(searchUser.lastMessages)}
             </span>
           </div>
           <div className="md:flex hidden lg:hidden justify-end xl:flex">
             <span className="text-textColor lg:text-md text-sm">
-              {Array.isArray(searchUser.lastMessages) && searchUser.lastMessages.length > 0
-                  ?
-                  getMessageTime(
-                      searchUser.lastMessages.find(
-                        (message) =>
-                          message.sender === userProfile._id ||
-                          message.receiver === userProfile._id
-                      )?.createdAt
-                    )
-                : ""}
+              {getLatestMessageTime(searchUser.lastMessages)}
             </span>
           </div>
         </div>

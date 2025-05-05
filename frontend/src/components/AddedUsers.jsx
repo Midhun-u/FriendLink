@@ -13,6 +13,26 @@ const AddedUsers = ({
 
   const {theme} = useSelector(state => state.theme)
 
+  //function for get last message
+  const getLatestMessages = (lastMessages = []) => {
+
+    if(Array.isArray(lastMessages) && lastMessages.length > 0){
+
+      return decryptMessageFunction(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id,)?.message || lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.mediaType) || ""
+
+    }
+
+  }
+
+  //function for get time
+  const getLatestMessageTime = (lastMessages = []) => {
+
+    if(Array.isArray(lastMessages) && lastMessages.length > 0){
+      return getMessageTime(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.createdAt || "")
+    }
+
+  }
+
   return (
     <>
       {addedUsers.length ? (
@@ -58,31 +78,12 @@ const AddedUsers = ({
               <span
                 className={`text-textColor h-auto max-h-12 overflow-hidden`}
               >
-                {Array.isArray(user.lastMessages) && user.lastMessages?.length > 0 
-                  ? 
-                    decryptMessageFunction(
-                      user.lastMessages.find(
-                        (message) =>
-                          message.sender === userProfile._id ||
-                          message.receiver === userProfile._id,
-                      )?.message || "File"
-                    )
-                   
-                  : ""}
+                {getLatestMessages(user.lastMessages)}
               </span>
             </div>
             <div className="flex justify-end w-20 absolute right-2 top-4">
               <span className="text-textColor lg:text-md text-sm">
-                {Array.isArray(user.lastMessages) && user.lastMessages.length > 0
-                  ?
-                    getMessageTime(
-                      user.lastMessages.find(
-                        (message) =>
-                          message.sender === userProfile._id ||
-                          message.receiver === userProfile._id,
-                      )?.createdAt,
-                    )
-                  : ""}
+                {getLatestMessageTime(user.lastMessages)}
               </span>
             </div>
           </div>

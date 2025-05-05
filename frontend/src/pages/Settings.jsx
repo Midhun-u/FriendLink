@@ -116,9 +116,9 @@ const Settings = () => {
           {
               pageState.passwordScreen
               ?
-              <div className="lg:w-[60%] md:w-[70%] w-[95%] h-auto min-h-100 mt-5 py-2 lg:px-20 md:px-20 px-5 flex flex-col justify-center items-center rounded-md gap-5 bg-white">
+              <div className={`lg:w-[60%] md:w-[70%] w-[95%] h-auto min-h-100 mt-5 py-2 lg:px-20 md:px-20 px-5 flex flex-col justify-center items-center rounded-md gap-5 ${theme === "dark" ? "bg-blackForeground" : "bg-white"}`}>
                 <div className="w-full h-auto relative">
-                  <input onChange={(event) => setPassword({...password, currentPassword: event.target.value })} type={showPassword ? "text" : "password"} className="border-1 border-black rounded-md w-full outline-none py-2 pl-3 pr-10 lg:text-md text-sm" placeholder="Enter your current password" />
+                  <input onChange={(event) => setPassword({...password, currentPassword: event.target.value })} type={showPassword ? "text" : "password"} className={`border-1 rounded-md w-full outline-none py-2 pl-3 pr-10 lg:text-md text-sm ${theme === "dark" ? "bg-blackForeground text-white" : "bg-white"}`} placeholder="Enter your current password" />
                   {
                     showPassword
                     ?
@@ -128,7 +128,7 @@ const Settings = () => {
                   }
                 </div>
                 <div className="w-full h-auto relative">
-                  <input onChange={(event) => setPassword({...password, newPassword: event.target.value })} type={showPassword ? "text" : "password"} className="border-1 border-black rounded-md w-full outline-none py-2 px-3 lg:text-md text-sm" placeholder="Enter your new password" />
+                  <input onChange={(event) => setPassword({...password, newPassword: event.target.value })} type={showPassword ? "text" : "password"} className={`border-1 rounded-md w-full outline-none py-2 pl-3 pr-10 lg:text-md text-sm ${theme === "dark" ? "bg-blackForeground text-white" : "bg-white"}`} placeholder="Enter your new password" />
                 </div>
                 <button onClick={handleChangePassword} className="bg-blue-700 text-white w-full h-13 rounded-md cursor-pointer">Change password</button>
               </div>

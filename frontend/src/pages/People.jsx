@@ -18,6 +18,7 @@ const People = () => {
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
   const { loading, people } = useSelector((state) => state.people);
+  const {theme} = useSelector(state => state.theme)
   const navigate = useNavigate();
   const { ref, inView } = useInView();
   const [requestedUsers, setRequestedUsers] = useState([]);
@@ -146,19 +147,19 @@ const People = () => {
           {
             profileScreen
             ?
-            <div className="w-screen h-screen bg-white/55 absolute z-10 flex justify-center items-center">
+            <div className={`w-screen h-screen ${theme === "dark" ? "bg-blackBackground/55" : "bg-white/55"} absolute z-10 flex justify-center items-center`}>
               <ViewProfile person={person} setProfileScreen={setProfileScreen} setRequestedUsers={setRequestedUsers} requestedUsers={requestedUsers} />
             </div>
             :
             null
           }
-        <div className="w-full h-full px-5 overflow-y-scroll bg-gray-100">
+        <div className={`w-full h-full px-5 overflow-y-scroll ${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"}`}>
           <div className="w-full h-40 flex flex-col items-start justify-center gap-6">
-            <h1 className="lg:text-xl">People</h1>
+            <h1 className={`lg:text-xl ${theme === "dark" ? "text-white" : "text-black"}`}>People</h1>
             <div className="relative lg:w-[50%] md:w-[70%] w-full flex items-center">
               <input
                 onChange={(event) => handleSeachPeople(event.target.value)}
-                className="lg:w-full lg:h-auto md:w-full w-full py-2 rounded-sm pr-5 pl-10 outline-none bg-white"
+                className={`lg:w-full lg:h-auto md:w-full w-full py-2 rounded-sm pr-5 pl-10 outline-none ${theme === "dark" ? "bg-blackForeground placeholder-white text-white" : "bg-white placeholder-black text-black"}`}
                 type="text"
                 placeholder="Search friends"
               />
@@ -172,7 +173,7 @@ const People = () => {
           <div className="w-full h-auto justify-center md:justify-start overflow-y-scroll flex flex-wrap gap-x-3 gap-y-3">
             {people?.map((person, index) => (
               <div
-                className="w-35 cursor-pointer min-h-20 lg:w-50 bg-white rounded-lg flex justify-start py-5 flex-col items-center px-2 relative gap-5"
+                className={`w-35 cursor-pointer min-h-20 lg:w-50 ${theme === "dark" ? "bg-blackForeground" : "bg-white"} rounded-lg flex justify-start py-5 flex-col items-center px-2 relative gap-5`}
                 key={index}
                 onClick={() => {
                   setPerson(person)
@@ -207,7 +208,7 @@ const People = () => {
                   )}
                 </div>
                 <div className="flex flex-col w-full items-center overflow-hidden">
-                  <span className="w-full text-center overflow-hidden">
+                  <span className={`w-full text-center overflow-hidden ${theme === "dark" ? "text-white" : "text-black"}`}>
                     {person.fullName}
                   </span>
                   <span className="text-sm text-gray-600 text-center w-full max-h-30 overflow-hidden">
@@ -216,14 +217,14 @@ const People = () => {
                 </div>
                 <div className="w-full flex justify-center px-2">
                   {requestedUsers.includes(person._id) ? (
-                    <button className={`flex mt-2 ${!person.bio ? "mt-0 bottom-5 w-[80%] absolute" : "w-full"} justify-center cursor-pointer items-center bg-gray-50 h-auto py-1 gap-2`}
+                    <button className={`flex mt-2 ${!person.bio ? "mt-0 bottom-5 w-[80%] absolute" : "w-full"} justify-center cursor-pointer items-center ${theme === "dark" ? "bg-blackBackground" : "bg-gray-50"} h-auto py-2 gap-2`}
                     >
                       <img
                         className="w-5 h-5 lg:w-6 lg:h-6"
                         src={assets.doneIcon}
                         alt=""
                       />
-                      <span className="text-sm font-normal">Request sent</span>
+                      <span className={`text-sm font-normal ${theme === "dark" ? "text-white" : "text-black"}`}>Request sent</span>
                     </button>
                   ) : addedUsers.includes(person._id) ? (
                     <button
@@ -234,26 +235,26 @@ const People = () => {
                         );
                         navigate("/");
                       }}
-                      className={`flex mt-2 justify-center ${!person.bio ? "absolute bottom-5 w-[90%]" : "w-full"} items-center cursor-pointer bg-gray-50 h-auto py-1 gap-2`}
+                      className={`flex mt-2 justify-center ${!person.bio ? "absolute bottom-5 w-[90%]" : "w-full"} items-center cursor-pointer ${theme === "dark" ? "bg-blackBackground" : "bg-gray-50"} h-auto py-1 gap-2`}
                     >
                       <img
                         className="w-5 h-5 lg:w-8 lg:h-8"
                         src={assets.messageIcon}
                         alt=""
                       />
-                      <span>Message</span>
+                      <span className={`${theme === "dark" ? "text-white" : "text-black"}`}>Message</span>
                     </button>
                   ) : (
                     <button
                       onClick={() => handleSendRequest(person._id, person)}
-                      className={`flex mt-2 ${!person.bio ? "absolute bottom-5 mt-0 w-[80%]" : "w-[95%]"} justify-center cursor-pointer items-center bg-gray-50 h-auto py-1 gap-2`}
+                      className={`flex mt-2 ${!person.bio ? "absolute bottom-5 mt-0 w-[80%]" : "w-[95%]"} justify-center cursor-pointer items-center ${theme === "dark" ? "text-white bg-blackBackground" : 'text-black bg-gray-50'} h-auto py-1 gap-2`}
                     >
                       <img
                         className="w-5 h-5 lg:w-8 lg:h-8 "
                         src={assets.addPeopleIcon}
                         alt=""
                       />
-                      <span className="text-sm font-normal">Add</span>
+                      <span className={`text-sm font-normal ${theme === "dark" ? "text-white" : "text-black"}`}>Add</span>
                     </button>
                   )}
                 </div>

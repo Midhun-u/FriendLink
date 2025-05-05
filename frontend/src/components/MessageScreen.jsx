@@ -361,7 +361,7 @@ const MessageScreen = ({
                           sessionStorage.setItem("session", JSON.stringify({ mediaType: "image", mediaURL: message.mediaURL, receiver: receiver }))
                           navigate(`/file`)
                         }} className="lg:w-40 lg:h-40 w-30 h-30 cursor-pointer" src={decryptMessageFunction(message.mediaURL)} alt="" />
-                        <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id || message.sender === userProfile._id ? "bg-white text-black" : "bg-[#39B1D9] text-white"}`} >{decryptMessageFunction(message.message)}</p>
+                        <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id || message.sender === userProfile._id ? theme === "dark" ? "bg-blackForeground text-white" : "bg-white text-black" : "bg-[#39B1D9] text-white"}`} >{decryptMessageFunction(message.message)}</p>
                       </div>
                       :
                       (
@@ -378,12 +378,12 @@ const MessageScreen = ({
                               </video>
                               <img className="absolute w-10 h-10" src={assets.videoPlayIcon} alt="" />
                             </div>
-                            <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.message ? "px-2 py-1" : ""} rounded-md ${message.sender._id === userProfile._id || message.sender === userProfile._id ? "bg-white text-black" : "bg-[#39B1D9] text-white"}`}>{decryptMessageFunction(message.message)}</p>
+                            <p className={`break-all whitespace-normal w-auto h-auto lg:text-lg md:text-md text-sm ${message.sender._id === userProfile._id || message.sender === userProfile._id ? theme === "dark" ? "bg-blackForeground text-white" : "bg-white text-black" : "bg-[#39B1D9] text-white"}`}>{decryptMessageFunction(message.message)}</p>
                           </div>
                           :
                           <div
                             className={`w-fit h-auto max-w-[50%] px-2 py-1 flex justify-center items-center ${message.sender._id === userProfile._id || message.sender === userProfile._id
-                              ? "bg-white text-black"
+                              ? theme === "dark" ? "bg-blackForeground text-white" : "bg-white text-black"
                               : "bg-[#39B1D9] text-white"
                               } rounded-md overflow-hidden`}
                           >
@@ -524,9 +524,9 @@ const MessageScreen = ({
         </div>
       </div>
       {
-        profileScreen
+          profileScreen
           ?
-          <div className="w-screen h-screen z-10 absolute bg-white/10 backdrop-blur-md flex justify-center items-center py-3">
+          <div className={`w-screen h-screen z-10 absolute ${theme === "dark" ? "bg-black/10" : "bg-white/10"} backdrop-blur-md flex justify-center items-center py-3`}>
             <ViewProfile person={receiver} setProfileScreen={setProfileScreen} />
           </div>
           :

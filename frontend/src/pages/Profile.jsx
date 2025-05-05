@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 import { assets } from "../assets/assets";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"
+
 const Profile = () => {
+
   const [editProfile, setEditProfile] = useState(false);
   const dispatch = useDispatch();
   const { loading, userData } = useSelector((state) => state.user);
@@ -19,6 +21,7 @@ const Profile = () => {
   });
   const imageRef = useRef();
   const navigate = useNavigate()
+  const {theme} = useSelector(state => state.theme)
 
   //function for get profile
   const handleGetProfile = async () => {
@@ -81,6 +84,7 @@ const Profile = () => {
 
   //function for change profile pic
   const handleChangeProfilePic = async (file) => {
+
     try {
       if (file.type.includes("image")) {
         const reader = new FileReader();
@@ -108,67 +112,44 @@ const Profile = () => {
           <Loader />
         </div>
       ) : (
-        <div className="w-full h-full py-10 px-2 lg:p-10 bg-gray-100 overflow-y-scroll flex flex-col justify-center lg:items-start items-center gap-5">
+        <div className={`w-full h-full py-10 px-2 lg:p-10 ${theme === "dark" ? "bg-blackBackground text-black" : "bg-gray-100 text-white"} overflow-y-scroll flex flex-col justify-center lg:items-start items-center gap-5`}>
+            <input
+              onChange={(event) =>
+                handleChangeProfilePic(event.target.files[0])
+              }
+              ref={imageRef}
+              type="file"
+              hidden
+            />
           {userData.profilePic ? (
             editProfile ? (
               <div>
                 <img
-                  onClick={() => imageRef.current.click()}
+                  onClick={() => imageRef.current?.click()}
                   className="w-40 h-40 rounded-full cursor-pointer"
                   src={userDetails.profilePic}
                   alt=""
                 />
-                <input
-                  onChange={(event) =>
-                    handleChangeProfilePic(event.target.files[0])
-                  }
-                  ref={imageRef}
-                  type="file"
-                  hidden
-                />
               </div>
-            ) : <img className="w-40 h-40 rounded-full cursor-pointer" src={userData.profilePic} />
+            ) : <img className="w-40 h-40 rounded-full cursor-pointer"  src={userData.profilePic} />
           ) : editProfile ? (
             <img
               className="w-40 h-40 rounded-full cursor-pointer"
-              src={assets.nullProfilePic}
+              src={userData.gender === "Male" ? assets.maleGenderIcon : (userData.gender === "Female" ? assets.femaleGenderIcon : assets.nullProfilePic)}
               alt=""
+              onClick={() => imageRef.current?.click()}
             />
           ) : (
             (
-              userData.gender === "Male"
+              userDetails.profilePic
               ?
+              <img onClick={() => imageRef.current?.click()} className="w-40  h-40 rouned-full cursor-pointer" src={userDetails.profilePic} alt="" />
+              :
               <img
                 className="w-40 h-40 rounded-full cursor-pointer"
-                src={assets.maleGenderIcon}
+                src={userData.gender === "Male" ? assets.maleGenderIcon : (userData.gender === "Female" ? assets.femaleGenderIcon : assets.nullProfilePic)}
                 alt=""
               />
-              :
-              (
-                userData.gender === "Female"
-                ?
-                <img
-                  className="w-40 h-40 rounded-full cursor-pointer"
-                  src={assets.femaleGenderIcon}
-                  alt=""
-                />
-                :
-                (
-                  userData.profilePic
-                  ?
-                  <img
-                    className="w-40 h-40 rounded-full cursor-pointer"
-                    src={userData.profilePic}
-                    alt=""
-                  />
-                  :
-                  <img
-                    className="w-40 h-40 rounded-full cursor-pointer"
-                    src={assets.nullProfilePic}
-                    alt=""
-                  />
-                )
-              )
             )
           )}
           {editProfile ? (
@@ -176,13 +157,13 @@ const Profile = () => {
               onChange={(event) =>
                 setUserDetails({ ...userDetails, fullName: event.target.value })
               }
-              className="lg:w-[40%] md:w-[60%] w-full py-2 border-2 rounded-md outline-none px-3"
+              className={`lg:w-[40%] md:w-[60%] w-full py-2 border-2 rounded-md outline-none px-3 ${theme === "dark" ? "bg-blackForeground text-white" : "bg-white text-black"}`}
               type="text"
               placeholder="Enter your name"
               defaultValue={userData.fullName}
             />
           ) : (
-            <h1 className="lg:text-xl">{userData?.fullName}</h1>
+            <h1 className={`lg:text-xl ${theme === "dark" ? "text-white" : "text-black"}`}>{userData?.fullName}</h1>
           )}
           {editProfile ? (
             <textarea
@@ -190,34 +171,35 @@ const Profile = () => {
                 setUserDetails({ ...userDetails, bio: event.target.value })
               }
               defaultValue={userData.bio}
-              className="border-2 lg:w-[40%] md:w-[60%] w-full py-2 h-30 resize-none rounded-md outline-none px-3"
+              className={`border-2 lg:w-[40%] md:w-[60%] w-full py-2 h-30 resize-none rounded-md outline-none px-3 ${theme === "dark" ? "bg-blackForeground text-white" : ""}`}
               placeholder="Enter you new bio"
             />
           ) : (
-            <p className="lg:max-w-[40%] md:w-[80%] w-[95%]">{userData?.bio}</p>
+            <p className={`lg:max-w-[40%] md:w-[80%] w-[95%] ${theme === "dark" ? "text-white" : 'text-black'}`}>{userData?.bio}</p>
           )}
           {editProfile ? (
             <div className="lg:w-[40%] flex gap-3">
-              <span>Gender : </span>
+              <span className={theme === "dark" ? "text-white" : ""}>Gender : </span>
               <select
                 onChange={(event) =>
                   setUserDetails({ ...userDetails, gender: event.target.value })
                 }
                 defaultValue={userData.gender}
+                className={`${theme === "dark" ? "text-white bg-blackBackground" : 'text-black'}`}
               >
-                <option value="select">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option className={theme === "dark" ? "text-white" : ""} value="select">Select</option>
+                <option className={theme === "dark" ? "text-white" : ""} value="Male">Male</option>
+                <option className={theme === "dark" ? "text-white" : ""} value="Female">Female</option>
               </select>
             </div>
           ) : (
-            <span>Gender : {userData?.gender ? userData.gender : "None"}</span>
+            <span className={`${theme === "dark" ? 'text-white' : "text-black"}`}>Gender : {userData?.gender ? userData.gender : "None"}</span>
           )}
           {editProfile ? (
             <div className="w-full flex gap-3">
               <button
                 onClick={() => setEditProfile(false)}
-                className="lg:w-[20%] md:w-[60%] w-full py-2 bg-white text-black rounded-md cursor-pointer"
+                className={`lg:w-[20%] md:w-[60%] w-full py-2 ${theme === "dark" ? "text-white bg-blackForeground" : "bg-white text-black"} rounded-md cursor-pointer`}
               >
                 Cancel changes
               </button>
