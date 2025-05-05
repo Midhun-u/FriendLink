@@ -23,7 +23,7 @@ export const signController = async (request , response) => {
             }else{
 
                 //hashing password before save
-                const hashedPassword = hashPassword(password)
+                const hashedPassword = await hashPassword(password)
 
                 if(password.length >= 6){
 
