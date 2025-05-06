@@ -9,16 +9,25 @@ const AddedUsers = ({
   setMessageScreen,
   setReceiver,
   userProfile,
-}) => {
+  socket
+}) => { 
 
   const {theme} = useSelector(state => state.theme)
+  const [userLastMessages , setUserLastMessages] = useState([])
 
   //function for get last message
-  const getLatestMessages = (lastMessages = []) => {
+  const getLatestMessages = (lastMessages = [] , userId) => {
 
     if(Array.isArray(lastMessages) && lastMessages.length > 0){
 
-      return decryptMessageFunction(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id,)?.message || lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.mediaType) || ""
+      if(userLastMessages.length > 0){
+
+        const value = decryptMessageFunction(userLastMessages.filter(messageData => messageData.sender == userId && userProfile._id || messageData.receiver === userId && userProfile._id))
+        console.log(value.message)
+
+      }else{
+        return decryptMessageFunction(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id,)?.message || lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.mediaType) || ""
+      }
 
     }
 
@@ -32,6 +41,14 @@ const AddedUsers = ({
     }
 
   }
+
+  useEffect(() => {
+
+    socket.on("receive-message" , (messageData) => {
+      setUserLastMessages(preMessages => [...preMessages , messageData])
+    })
+
+  } , [])
   
   return (
     <>
@@ -88,7 +105,7 @@ const AddedUsers = ({
               <span
                 className={`text-textColor h-auto max-h-12 overflow-hidden`}
               >
-                {getLatestMessages(user.lastMessages)}
+                {getLatestMessages(user.lastMessages , user._id)}
               </span>
             </div>
             <div className="flex justify-end w-20 absolute right-2 top-4">

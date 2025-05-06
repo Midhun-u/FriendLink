@@ -27,7 +27,7 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
-  const { inView, ref } = useInView();
+  const { inView, ref } = useInView()
 
   //function for get added user
   const getUsers = async () => {
@@ -134,6 +134,7 @@ const Home = () => {
                 setReceiver={setReceiver}
                 setMessageScreen={setMessageScreen}
                 userProfile={userProfile}
+                socket={socket}
               />
             ) : (
               <SearchUsers
