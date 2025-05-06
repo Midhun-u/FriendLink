@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { decryptMessageFunction, getMessageTime } from "../utilities/utilities";
 import { assets } from "../assets/assets";
 import { NavLink } from "react-router";
@@ -32,7 +32,7 @@ const AddedUsers = ({
     }
 
   }
-
+  
   return (
     <>
       {addedUsers.length ? (
@@ -69,9 +69,19 @@ const AddedUsers = ({
                 :
                 <img className="lg:w-15 lg:h-16 xl:w-19 h-12 xl:h-20 rounded-full" src={assets.nullProfilePic} alt="" />
               )}
-              {user.online ? (
-                <div className="w-2 h-2 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-green-600"></div>
-              ) : null}
+              {
+                userProfile?.blockedUsers?.includes(user._id)
+                ?
+                <div className="w-3 h-3 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-red-500"></div>
+                :
+                (
+                  user.online
+                  ?
+                  <div className="w-3 h-3 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-green-500"></div>
+                  :
+                  null
+                )
+              }
             </div>
             <div className="w-full h-full overflow-hidden flex flex-col justify-center">
               <span className={`lg:text-xl font-medium ${theme === "dark" ? "text-white" : "text-black"}`}>{user.fullName}</span>

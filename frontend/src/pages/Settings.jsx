@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { assets } from "../assets/assets";
-import { changeCurrentPassword, profileApi } from "../api/authApi"
+import { changeCurrentPassword, logout, profileApi } from "../api/authApi"
 import { toast } from 'react-toastify'
 import {darkTheme , whiteTheme} from '../store/themeSlice'
 import {useDispatch , useSelector} from 'react-redux'
+import {useNavigate} from 'react-router'
+import { getBlockedUsers, unblockUser } from "../api/peopleApi";
+import {useInView} from 'react-intersection-observer'
+import Loader from '../components/Loader'
+import axiosInstance from "../api/axiosInstance";
 
 const Settings = () => {
 
@@ -21,6 +26,12 @@ const Settings = () => {
     newPassword: ""
   })
   const [showPassword , setShowPassword] = useState(false)
+  const [blockedUsers , setBlockedUsers] = useState([])
+  const [page , setPage] = useState(1)
+  const [blockedUsersCount , setBlockedUsersCount] = useState(0)
+  const navigate = useNavigate()
+  const {inView , ref} = useInView()
+
 
   //function for get user profile
   const getUserProfile = async () => {
@@ -98,6 +109,106 @@ const Settings = () => {
 
   }
 
+  //function for logout
+  const handleLogout = async () => {
+
+    try{
+
+      const result = await logout()
+      
+      if(result.success){
+
+        toast.success(result.message)
+        navigate("/login")
+
+      }
+
+    }catch(error){
+
+      const errorMessage = error?.response.data
+
+      if (errorMessage.auth === false) {
+        navigate("/login")
+      } else if (errorMessage.message) {
+        toast.error(errorMessage.message)
+      } else {
+        toast.error("Something went wrong");
+      }
+
+    }
+
+  }
+
+  //function for get blocked users
+  const handleGetBlockedUsers = async () => {
+
+    try{
+
+      const result = await getBlockedUsers(page)
+      
+      if(result.success){
+
+        if(page === 1){
+          setBlockedUsers(result.blockedUsers)
+          setBlockedUsersCount(result.blockedUsersCount)
+        }else{
+          setBlockedUsers(prev => [...prev , ...result.blockedUsers])
+        }
+      }
+
+    }catch(error){
+
+      const errorMessage = error?.response.data
+
+      if (errorMessage.auth === false) {
+        navigate("/login")
+      } else if (errorMessage.message) {
+        toast.error(errorMessage.message)
+      } else {
+        toast.error("Something went wrong");
+      }
+
+    }
+
+  }
+
+  //function for unblock user
+  const handleUnblockUser = async (personId , index) => {
+
+    try{
+
+      const result = await unblockUser(personId)
+      
+      if(result.success){
+
+        const newBlockedUsers = blockedUsers
+        newBlockedUsers.splice(index , 1)
+        setBlockedUsers(() => [...newBlockedUsers])
+
+      }
+
+    }catch(error){
+      const errorMessage = error?.response.data
+
+      if (errorMessage.auth === false) {
+        navigate("/login")
+      } else if (errorMessage.message) {
+        toast.error(errorMessage.message)
+      } else {
+        toast.error("Something went wrong");
+      }
+      
+    }
+
+  }
+
+  useEffect(() => {
+
+    setPage(page + 1)
+    handleGetBlockedUsers()
+
+  } , [inView])
+
   return (
     <div className="w-screen h-screen flex flex-col lg:flex-row">
       <Sidebar />
@@ -148,7 +259,33 @@ const Settings = () => {
                 :
                 pageState.blockUsersScreen
                   ?
-                  <div></div>
+                  <div className={`lg:w-[60%] md:w-[80%] w-[95%] h-110 mt-5 bg-inherit flex flex-col items-center overflow-x-hidden overflow-y-scroll`}>
+                    {
+                      blockedUsers?.map((blockedUser , index) => (
+
+                        <>
+                          <div key={index} className={`w-full h-20 relative items-center px-5 overflow-hidden ${theme === "dark" ? "bg-blackForeground text-white" : "bg-white text-black"} flex rounded-md gap-3`}>
+                            <img className="w-15 h-15 rounded-full" src={blockedUser.profilePic} alt="" />
+                            <span className="lg:text-lg md:text-md text-sm">{blockedUser.fullName}</span>
+                            <button onClick={() => handleUnblockUser(blockedUser._id , index)} className="px-5 py-1  absolute lg:right-10 md:right-5 right-1 flex justify-center items-center cursor-pointer gap-3">
+                              <img className="w-7 h-7" src={assets.unBlockIcon} alt="" />
+                              <span>Unblock</span>
+                            </button>
+                          </div>
+                          {
+                            blockedUsers.length < blockedUsersCount
+                            ?
+                            <div ref={ref} className="w-full h-auto mt-3">
+                              <Loader />
+                            </div>
+                            :
+                            null
+                          }
+                        </>
+
+                      ))
+                    }
+                  </div>
                   :
                   <>
                   {
@@ -169,9 +306,9 @@ const Settings = () => {
                       <img className="w-9 h-9" src={assets.blockedUsersIcon} alt="" />
                       <span className={`lg:text-lg text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>Blocked people</span>
                     </div>
-                    <div className={`lg:w-[60%] md:w-[70%] w-[95%] h-auto mt-5 py-3 px-2 flex items-center rounded-md gap-4 cursor-pointer ${theme === "dark" ? "bg-blackForeground" : "bg-white"}`}>
-                      <img className="w-8 h-8" src={assets.deleteAccountIcon} alt="" />
-                      <span className={`lg:text-lg text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>Delete account</span>
+                    <div onClick={handleLogout} className={`lg:w-[60%] md:w-[70%] w-[95%] h-auto mt-5 py-3 px-2 flex items-center rounded-md gap-4 cursor-pointer ${theme === "dark" ? "bg-blackForeground" : "bg-white"}`}>
+                      <img className="w-8 h-8" src={assets.logoutIcon} alt="" />
+                      <span className={`lg:text-lg text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>Logout</span>
                     </div>
                   </>
           }

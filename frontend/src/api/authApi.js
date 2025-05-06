@@ -110,3 +110,10 @@ export const changeCurrentPassword = async (currentPassword , newPassword) => {
     }
 
 }
+
+export const logout = async () => {
+
+    const response = (await axiosInstance.post("/auth/logout")).data
+    return response
+
+}

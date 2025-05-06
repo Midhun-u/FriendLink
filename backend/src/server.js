@@ -42,6 +42,7 @@ const io = new Server(server , {
     }
 })
 
+//function for socket connection
 socketHandler(io)
 
 server.listen(PORT , () => {

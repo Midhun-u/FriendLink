@@ -240,3 +240,47 @@ export const unblockUserController = async (request , response) => {
   }
 
 }
+
+//controller for get blocked users
+export const getBlockedUsersController = async (request , response) => {
+
+  try{
+
+    const {id : userId} = request.user
+    let {page = 1} = request.query || {}
+    page = typeof page === "string" ? parseInt(page) : page
+    const limit = 10
+
+    if(userId){
+
+      const user = await User.findOne({_id : userId})
+      
+      if(user){
+
+        const blockedUsersIds = user.blockedUsers || []
+        const blockedUsers = await User.aggregate([
+
+          {$match : {_id : {$in : blockedUsersIds}}},
+          {$skip : (page - 1) * limit},
+          {$limit : limit}
+          
+        ])
+
+        const blockedUsersCount = user.blockedUsers.length
+
+        response.status(200).json({success : true , blockedUsers : blockedUsers , blockedUsersCount : blockedUsersCount})
+
+      }else{
+        response.status(400).json({success : false , message : "User not found"})
+      }
+
+    }
+
+  }catch(error){
+
+    response.status(500).json({error : "Server error"})
+    console.log("getBlockedUsers controller error : " + error)
+
+  }
+
+}

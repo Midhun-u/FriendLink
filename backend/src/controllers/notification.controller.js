@@ -6,17 +6,24 @@ export const getNotificationController = async (request , response) => {
     try{
 
         const {id} = request.user //userId
-        let {page} = request.query || 1
-        page = parseInt(page)
+        let {page = 1} = request.query || {}
+        page = typeof page === "string" ? parseInt(page) : page
         const limit = 10
 
         if(id){
 
             const user = await User.findOne({_id : id}).select("-password")
-            const notifications = user.notifications.slice((page - 1) * limit , page * limit)
-            const totalCount = user.notifications.length
 
-            response.status(200).json({success : true , notifications : notifications , totalCount : totalCount})
+            if(user){
+
+                const notifications = user.notifications.slice((page - 1) * limit , page * limit)
+                const totalCount = user.notifications.length
+    
+                response.status(200).json({success : true , notifications : notifications , totalCount : totalCount})
+
+            }else{
+                response.status(400).json({success : false , message : "User not found"})
+            }
 
         }
 

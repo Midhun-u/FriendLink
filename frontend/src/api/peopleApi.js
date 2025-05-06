@@ -66,3 +66,11 @@ export const unblockUser = async (personId) => {
   }
 
 }
+
+//function for get blocked users
+export const getBlockedUsers = async (page = 1) => {
+
+  const response = (await axiosInstance.get(`/people/get-blockedUsers/?page=${page}`)).data
+  return response
+
+}

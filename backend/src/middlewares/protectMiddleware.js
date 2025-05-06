@@ -5,11 +5,11 @@ export const protectMiddleware = async (request , response , next) => {
 
     try{
 
-        const {token} = request.cookies
+        const {friendLink} = request.cookies
 
-        if(token){
+        if(friendLink){
 
-            const decode = jwt.verify(token , process.env.JWT_SECRET)
+            const decode = jwt.verify(friendLink , process.env.JWT_SECRET)
 
             if(decode){
 
@@ -30,7 +30,7 @@ export const protectMiddleware = async (request , response , next) => {
         
     }catch(error){
 
-        response.status(500).json({error : "Server error"})
+        response.status(500).json({error : "Server error" , success : false , auth : false})
         console.log("middleware error : " + error)
 
     }
