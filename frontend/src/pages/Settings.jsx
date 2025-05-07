@@ -261,6 +261,8 @@ const Settings = () => {
                   ?
                   <div className={`lg:w-[60%] md:w-[80%] w-[95%] h-110 mt-5 bg-inherit flex flex-col items-center overflow-x-hidden overflow-y-scroll`}>
                     {
+                      blockedUsers.length
+                      ?
                       blockedUsers?.map((blockedUser , index) => (
 
                         <>
@@ -284,6 +286,10 @@ const Settings = () => {
                         </>
 
                       ))
+                      :
+                      <div className="w-full h-100 flex justify-center items-center">
+                        <h1 className={`${theme === "dark" ? "text-white" : "text-black"} text-xl`}>No blocked users</h1>
+                      </div>
                     }
                   </div>
                   :
