@@ -9,26 +9,17 @@ const AddedUsers = ({
   setMessageScreen,
   setReceiver,
   userProfile,
-  socket
+  onlineUsers,
+  blockedUsers,
 }) => { 
 
   const {theme} = useSelector(state => state.theme)
-  const [userLastMessages , setUserLastMessages] = useState([])
 
   //function for get last message
-  const getLatestMessages = (lastMessages = [] , userId) => {
+  const getLatestMessages = (lastMessages = []) => {
 
     if(Array.isArray(lastMessages) && lastMessages.length > 0){
-
-      if(userLastMessages.length > 0){
-
-        const value = decryptMessageFunction(userLastMessages.filter(messageData => messageData.sender == userId && userProfile._id || messageData.receiver === userId && userProfile._id))
-        console.log(value.message)
-
-      }else{
-        return decryptMessageFunction(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id,)?.message || lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.mediaType) || ""
-      }
-
+      return decryptMessageFunction(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.message || lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.mediaType) || ""
     }
 
   }
@@ -37,18 +28,10 @@ const AddedUsers = ({
   const getLatestMessageTime = (lastMessages = []) => {
 
     if(Array.isArray(lastMessages) && lastMessages.length > 0){
-      return getMessageTime(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.createdAt || "")
+      return getMessageTime(lastMessages.find((message) => message.sender === userProfile._id || message.receiver === userProfile._id)?.createdAt || "") || ""
     }
 
   }
-
-  useEffect(() => {
-
-    socket.on("receive-message" , (messageData) => {
-      setUserLastMessages(preMessages => [...preMessages , messageData])
-    })
-
-  } , [])
   
   return (
     <>
@@ -87,12 +70,12 @@ const AddedUsers = ({
                 <img className="lg:w-15 lg:h-16 xl:w-19 h-12 xl:h-20 rounded-full" src={assets.nullProfilePic} alt="" />
               )}
               {
-                userProfile?.blockedUsers?.includes(user._id)
+                blockedUsers?.includes(user._id)
                 ?
                 <div className="w-3 h-3 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-red-500"></div>
                 :
                 (
-                  user.online
+                  onlineUsers?.includes(user._id)
                   ?
                   <div className="w-3 h-3 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-green-500"></div>
                   :
@@ -105,7 +88,9 @@ const AddedUsers = ({
               <span
                 className={`text-textColor h-auto max-h-12 overflow-hidden`}
               >
-                {getLatestMessages(user.lastMessages , user._id)}
+                {
+                  getLatestMessages(user.lastMessages)
+                }
               </span>
             </div>
             <div className="flex justify-end w-20 absolute right-2 top-4">

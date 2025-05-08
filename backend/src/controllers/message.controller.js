@@ -58,7 +58,7 @@ export const sendMessageController = async (request , response) => {
                     sender : userId,
                     receiver : receiverId,
                     ...(message && {message : message}),
-                    ...(mediaType && mediaURL && {mediaType : mediaType , mediaURL : mediaURL}),
+                    ...(mediaType && mediaURL && {mediaType : mediaType.toUpperCase() , mediaURL : mediaURL}),
                     createdAt : new Date()
     
             })
@@ -123,14 +123,10 @@ export const getMessageController = async (request , response) => {
             .skip(skip)
             .limit(limit)
 
-            const totalCount = await Message.countDocuments({
-
-                $or : [
-                    {sender : userId , receiver : receiverId},
-                    {sender : receiverId , receiver : userId}
-                ]
-
-            })
+            const totalCount = await Message.countDocuments({$or : [
+                {sender : userId , receiver : receiverId},
+                {sender : receiverId , receiver : userId}
+            ]})
 
             response.status(200).json({success : true , messages : messages , totalCount : totalCount})
 

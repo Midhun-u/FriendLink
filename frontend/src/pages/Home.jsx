@@ -27,6 +27,8 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
+  const [onlineUsers , setOnlineUsers] = useState([])
+  const [blockedUsers , setBlockedUsers] = useState([])
   const { inView, ref } = useInView()
 
   //function for get added user
@@ -57,7 +59,13 @@ const Home = () => {
       const result = await profileApi();
 
       if (result.success) {
-        setUserProfile(result.profile);
+
+        setUserProfile(result.profile)
+        setBlockedUsers(result.profile.blockedUsers)
+
+        //send user id
+        socket.emit("online-users" , result.profile._id)
+
       }
     } catch (error) {
       const errorMessage = error?.response.data
@@ -73,8 +81,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getProfile();
-  }, []);
+
+    getProfile()
+
+  }, [])
 
   useEffect(() => {
     getUsers();
@@ -91,6 +101,22 @@ const Home = () => {
       sessionStorage.clear();
     }
   }, [])
+
+  useEffect(() => {
+
+    const handleGetOnlineUsers = () => {
+
+      socket.on("get-online-users" , (onlineUsers) => {
+        setOnlineUsers(() => [...onlineUsers])
+      })
+
+    }
+
+    handleGetOnlineUsers()
+
+    return () => socket.off("get-online-users" , handleGetOnlineUsers)
+
+  } , [])
 
   //function for search added user
   const handleSeachAddedUsers = (personName) => {
@@ -134,7 +160,8 @@ const Home = () => {
                 setReceiver={setReceiver}
                 setMessageScreen={setMessageScreen}
                 userProfile={userProfile}
-                socket={socket}
+                onlineUsers={onlineUsers}
+                blockedUsers={blockedUsers}
               />
             ) : (
               <SearchUsers
@@ -142,6 +169,8 @@ const Home = () => {
                 setMessageScreen={setMessageScreen}
                 setReceiver={setReceiver}
                 userProfile={userProfile}
+                onlineUsers={onlineUsers}
+                blockedUsers={blockedUsers}
               />
             )}
             {addedUsers.length < totalCount ? (
@@ -158,6 +187,9 @@ const Home = () => {
             setReceiver={setReceiver}
             setMessageScreen={setMessageScreen}
             socket={socket}
+            onlineUsers={onlineUsers}
+            blockedUsers={blockedUsers}
+            setBlockedUsers={setBlockedUsers}
           />
         ) : (
           <div className={`hidden lg:grid w-full h-full ${theme === "dark" ? "bg-blackForeground" : "bg-white"} place-items-center`}>

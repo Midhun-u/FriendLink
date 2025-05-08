@@ -287,7 +287,8 @@ const Settings = () => {
 
                       ))
                       :
-                      <div className="w-full h-100 flex justify-center items-center">
+                      <div className="w-full h-100 flex justify-center items-center flex-col">
+                        <img className="w-50 h-50" src={assets.notUserFoundIcon} alt="" />
                         <h1 className={`${theme === "dark" ? "text-white" : "text-black"} text-xl`}>No blocked users</h1>
                       </div>
                     }

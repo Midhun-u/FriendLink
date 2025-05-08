@@ -19,7 +19,10 @@ const MessageScreen = ({
   receiver,
   setReceiver,
   userProfile,
-  socket
+  socket,
+  onlineUsers,
+  blockedUsers,
+  setBlockedUsers
 }) => {
 
   const { theme } = useSelector(state => state.theme)
@@ -35,8 +38,9 @@ const MessageScreen = ({
   const imageRef = useRef(null)
   const [emoji, setEmoji] = useState(false)
   const [profileScreen, setProfileScreen] = useState(false)
-  let disableButton = false
+  const [typingUsers , setTypingUsers] = useState([])
   const navigate = useNavigate()
+  let disableButton = false
 
   //function for get messages
   const getMessages = async () => {
@@ -46,17 +50,18 @@ const MessageScreen = ({
       const result = await getMessageApi(receiver._id, page)
 
       if (result.success) {
+
         setMessages((preMessage) => {
 
           if (page === 1) {
-            return result.messages
+            return [...result.messages]
           } else {
-            return [...preMessage, ...result.messages]
+            return [...preMessage , ...result.messages]
           }
 
         })
 
-        setTotalCount(result.totalCount);
+        setTotalCount(result.totalCount)
       }
     } catch (error) {
       const errorMessage = error?.response.data
@@ -142,13 +147,17 @@ const MessageScreen = ({
   }, [page])
 
   useEffect(() => {
+
     setPage(1)
     setMessages([])
     getMessages()
+
   }, [receiver])
 
   useEffect(() => {
-    setPage(page + 1)
+    if(inView && messages.length < totalCount){
+      setPage((pre) => pre + 1)
+    }
   }, [inView])
 
 
@@ -165,9 +174,7 @@ const MessageScreen = ({
   useEffect(() => {
 
     socket.on("receive-message", (messageData) => {
-
-      setMessages((preMessage) => [...preMessage, messageData])
-
+      setMessages((preMessage) => [...preMessage , messageData])
     })
 
     return () => {
@@ -237,8 +244,32 @@ const MessageScreen = ({
 
   }
 
+  //function for send realtime "typing " feature
+  const handleRealtimeTyping = () => {
+
+    socket.emit("typing-user" , userProfile._id)
+
+    setTimeout(() => {
+      
+      socket.emit("remove-typing" , userProfile._id)
+
+    } , 1000)
+
+  }
+
+  useEffect(() => {
+
+    socket.on("get-typingUsers" , (data) => {
+      setTypingUsers(data)
+    })
+
+    return () => socket.off("get-typingUsers")
+
+  } , [])
+
   return (
     <>
+    {/* top bar */}
       <div className={`grid grid-rows-[70px_1fr_70px] lg:grid-rows-[90px_1fr_90px] w-full h-full absolute overflow-scroll lg:relative ${theme === "dark" ? "bg-blackBackground" : "bg-white"} `}>
         <div className={`w-full h-full grid grid-cols-[1fr_100px] px-2 lg:px-5 rounded-md ${theme === "dark" ? "bg-blackForeground" : "bg-white"}  relative`}>
           <div onClick={() => {
@@ -275,9 +306,19 @@ const MessageScreen = ({
             )}
             <div className="flex flex-col items-start">
               <span className={`lg:text-lg ${theme === "dark" ? "text-white" : "text-black"}`}>{receiver.fullName}</span>
-              {receiver.online ? (
-                <span className="text-green-600 text-sm">Online</span>
+              {blockedUsers?.includes(receiver._id) ? (
+                <span className="text-red-600 text-sm">Blocked</span>
               ) : (
+                onlineUsers.includes(receiver._id)
+                ?
+                (
+                  typingUsers.includes(receiver._id)
+                  ?
+                  <span className="text-green-500 text-sm">Typing...</span>
+                  :
+                  <span className="text-green-500 text-sm">Online</span>
+                )
+                :
                 <span className="text-gray-500 text-sm">Offline</span>
               )}
             </div>
@@ -301,12 +342,21 @@ const MessageScreen = ({
                 {
                   blockedMessage
                     ?
-                    <div onClick={() => handleUnBlockUser(receiver._id)} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} px-5`}>
+                    <div onClick={() => {
+                      handleUnBlockUser(receiver._id)
+                      setBlockedUsers(pre => {
+                        const filteredBlockedUsers = pre.filter(blockUsersId => blockUsersId !== receiver._id)
+                        return filteredBlockedUsers
+                      })
+                    }} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} px-5`}>
                       <img className="w-7 h-7 lg:w-10 lg:h-10" src={assets.unBlockIcon} alt="" />
                       <span className={`${theme === "dark" ? "text-white" : "text-black"}`}>Unblock</span>
                     </div>
                     :
-                    <div onClick={() => handleBlockUser(receiver._id)} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-white"} px-5`}>
+                    <div onClick={() => {
+                      handleBlockUser(receiver._id)
+                      setBlockedUsers(pre => [...pre , receiver._id])
+                    }} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-white"} px-5`}>
                       <img
                         className="w-7 h-7 lg:w-10 lg:h-10"
                         src={assets.blockIcon}
@@ -343,6 +393,7 @@ const MessageScreen = ({
             <img className="w-5 h-5 relative top-2" src={assets.encryptIcon} alt="" />
             <p className={`text-sm mt-4 px-2 ${theme === "dark" ? "text-white" : "text-black"}`}>Messages are end-to-end encrypted. No one outside of this chat</p>
           </div>
+          {/* Message screen */}
           {messages?.length ? (
             messages?.map((message, index) => (
               <>
@@ -354,7 +405,7 @@ const MessageScreen = ({
                   key={index}
                 >
                   {
-                    message.mediaType === "image" && message.mediaURL
+                    message.mediaType === "IMAGE" && message.mediaURL
                       ?
                       <div className={`w-fit h-auto max-w-[50%] px-2 py-1 flex flex-col gap-3 justify-center items-center overflow-hidden`}>
                         <img onClick={() => {
@@ -365,7 +416,7 @@ const MessageScreen = ({
                       </div>
                       :
                       (
-                        message.mediaType === "video" && message.mediaURL
+                        message.mediaType === "VIDEO" && message.mediaURL
 
                           ?
                           <div className="w-fit h-auto max-w-[50%] px-2 py-1 flex flex-col gap-3 justify-center items-center overflow-hidden cursor-pointer">
@@ -414,7 +465,7 @@ const MessageScreen = ({
               </div>
           )}
           {
-            messages?.length < totalCount
+              messages.length < totalCount
               ?
               <div ref={ref} className="w-full h-10">
                 <Loader />
@@ -423,6 +474,7 @@ const MessageScreen = ({
               null
           }
         </div>
+        {/* message send area */}
         <div className={`w-full h-full ${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} flex justify-center items-center`}>
           {
             blockedMessage
@@ -489,6 +541,8 @@ const MessageScreen = ({
                         onChange={(event) => setInputValue(event.target.value)}
                         className={`resize-none w-full h-full outline-none pl-5 pr-13 ${theme === "dark" ? "text-white placeholder-white" : "text-black"}`}
                         placeholder="Enter your message here"
+                        onKeyDown={handleRealtimeTyping}
+                        
                       ></textarea>
                       <img
                         onClick={() => setEmoji(!emoji)}

@@ -6,7 +6,7 @@ import {
 import { assets } from "../assets/assets"
 import {useSelector} from 'react-redux'
 
-const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}) => {
+const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile , onlineUsers , blockedUsers}) => {
 
   const {theme} = useSelector(state => state.theme)
 
@@ -38,7 +38,7 @@ const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}
             setMessageScreen(true);
             setReceiver(searchUser);
           }}
-          className={`w-full h-auto rounded-md min-h-25 px-5 ${theme === "dark" ? "bg-blackForeground" : "bg-white"} grid grid-cols-[70px_200px_auto] lg:grid-cols-[70px_200px_auto] xl:grid-cols-[80px_200px_auto] cursor-pointer gap-4 py-3`}
+          className={`w-full h-auto rounded-md min-h-25 px-5 ${theme === "dark" ? "bg-blackForeground" : "bg-white"} grid grid-cols-[70px_200px_auto] lg:grid-cols-[70px_200px_auto] xl:grid-cols-[80px_200px_auto] cursor-pointer gap-4 py-3 relative`}
           key={index}
         >
           <div className="flex flex-col items-end justify-center relative">
@@ -65,11 +65,20 @@ const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}
               :
               <img className="lg:w-15 lg:h-16 xl:w-19 h-12 xl:h-20 rounded-full" src={assets.nullProfilePic} alt="" />
             )}
-            {searchUser.online ? (
-              <div className="w-2 h-2 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-green-600"></div>
-            ) : null}
+            {
+              blockedUsers?.includes(searchUser._id)
+              ?
+              <div className="w-3 h-3 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-red-600"></div>
+              :
+              (
+                onlineUsers?.includes(searchUser._id) ?
+                <div className="w-3 h-3 absolute bottom-5 lg:bottom-2 lg:right-3 rounded-full bg-green-500"></div>
+                :
+                null
+              )
+            }
           </div>
-          <div className="w-full h-full overflow-hidden flex flex-col justify-center">
+          <div className="w-full h-full overflow-hidden relative flex flex-col justify-center">
             <span className={`lg:text-xl font-medium ${theme === "dark" ? "text-white" : "text-black"}`}>
               {searchUser.fullName}
             </span>
@@ -77,7 +86,7 @@ const SearchUsers = ({ searchUsers, setMessageScreen, setReceiver , userProfile}
               {getLatestMessages(searchUser.lastMessages)}
             </span>
           </div>
-          <div className="md:flex hidden lg:hidden justify-end xl:flex">
+          <div className="flex justify-end w-20 absolute right-2 top-4">
             <span className="text-textColor lg:text-md text-sm">
               {getLatestMessageTime(searchUser.lastMessages)}
             </span>

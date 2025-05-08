@@ -40,6 +40,7 @@ import changeThemeIcon from './change_theme_icon.png'
 import blockedUsersIcon from './blocked_users.png'
 import logoutIcon from './logout.png'
 import unblockIcon from './unblock.png'
+import notUserFoundIcon from './person_not_found.png'
 
 const assets = {
     logo : logo,
@@ -83,7 +84,8 @@ const assets = {
     changeThemeIcon : changeThemeIcon,
     blockedUsersIcon : blockedUsersIcon,
     logoutIcon : logoutIcon,
-    unblockIcon : unblockIcon
+    unblockIcon : unblockIcon,
+    notUserFoundIcon : notUserFoundIcon
 }
 
 export {assets}
