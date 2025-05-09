@@ -11,7 +11,7 @@ export const getAddedUsersController = async (request , response) => {
         const {id : userId} = request.user
         let {page} = request.query || 1
         page = parseInt(page)
-        const limit = 10
+        const limit = 20
 
         if(userId){
 
@@ -43,6 +43,8 @@ export const sendMessageController = async (request , response) => {
 
         if(message && userId && receiverId  || file && userId && receiverId){
 
+            const receiver = await User.findOne({_id : receiverId})
+
             let mediaType = ""
             let mediaURL = ""
 
@@ -65,10 +67,16 @@ export const sendMessageController = async (request , response) => {
 
             if(createMessage){
 
+                const index = receiver.addedUsers.indexOf(userId)
+                receiver.addedUsers.splice(index , 1)
+                receiver.addedUsers.unshift(userId)
+
                 await Promise.all([
+                    receiver.save(),
                     User.updateOne({_id : userId} , {$push : {lastMessages : {$each : [createMessage] , $position : 0}}}),
                     User.updateOne({_id : receiverId} , {$push : {lastMessages : {$each : [createMessage] , $position : 0}}})
                 ])
+
 
                 response.status(201).json({success : true , message : "Message created" , createdMessage : createMessage})
     

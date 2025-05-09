@@ -130,9 +130,11 @@ const People = () => {
 
   //when loading appear change page count
   useEffect(() => {
+
     if (inView) {
       setPage((prePage) => prePage + 1);
     }
+
   }, [inView]);
 
   return (

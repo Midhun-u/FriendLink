@@ -1,7 +1,10 @@
 export const socketHandler = (io) => {
 
   let onlineUsers = []
-  const typingUsers = []
+  const typingUsers = {
+    from : null,
+    to : null
+  }
 
   io.on("connection", (socket) => {
 
@@ -22,21 +25,28 @@ export const socketHandler = (io) => {
 
     })
 
-    //for show label "typing"
-    socket.on("typing-user" , (typingUserId) => {
+    //for showing "typing" label
+    socket.on("typingUser" , (typingUserId , receiverId) => {
       
-      if(typingUserId && !typingUsers.includes(typingUserId)){
-        typingUsers.push(typingUserId)
+      if(typingUserId && receiverId){
+
+        typingUsers.from = typingUserId
+        typingUsers.to = receiverId
+
       }
+      
       io.emit("get-typingUsers" , typingUsers)
 
     })
 
-    //remove show label "typing"
-    socket.on("remove-typing" , (typingUserId) => {
+    //for removing typing user
+    socket.on("remove-typingUser" , (typingUserId) => {
+      
+      if(typingUserId){
 
-      const index = typingUsers.indexOf(typingUserId)
-      typingUsers.splice(index , 1)
+        typingUsers.from = null
+
+      }
 
       io.emit("get-typingUsers" , typingUsers)
 

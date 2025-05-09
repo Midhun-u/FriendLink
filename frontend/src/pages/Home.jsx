@@ -87,11 +87,19 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    getUsers();
-  }, [page])
+
+    getUsers()
+
+  } , [page])
 
   useEffect(() => {
-    setPage(page + 1);
+
+    if(inView && addedUsers.length < totalCount){
+
+      setPage(pre => pre + 1)
+
+    }
+
   }, [inView])
 
   useEffect(() => {
@@ -162,6 +170,8 @@ const Home = () => {
                 userProfile={userProfile}
                 onlineUsers={onlineUsers}
                 blockedUsers={blockedUsers}
+                totalCount={totalCount}
+                ref={ref}
               />
             ) : (
               <SearchUsers
@@ -171,6 +181,7 @@ const Home = () => {
                 userProfile={userProfile}
                 onlineUsers={onlineUsers}
                 blockedUsers={blockedUsers}
+                
               />
             )}
             {addedUsers.length < totalCount ? (

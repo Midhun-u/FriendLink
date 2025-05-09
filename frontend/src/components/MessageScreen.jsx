@@ -22,13 +22,13 @@ const MessageScreen = ({
   socket,
   onlineUsers,
   blockedUsers,
-  setBlockedUsers
+  setBlockedUsers,
 }) => {
 
   const { theme } = useSelector(state => state.theme)
   const [moreSection, setMoreSection] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages , setMessages] = useState([])
   const [blockedMessage, setBlockedMessage] = useState()
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -38,9 +38,9 @@ const MessageScreen = ({
   const imageRef = useRef(null)
   const [emoji, setEmoji] = useState(false)
   const [profileScreen, setProfileScreen] = useState(false)
-  const [typingUsers , setTypingUsers] = useState([])
+  const [typingUsersData , setTypingUsersData] = useState()
   const navigate = useNavigate()
-  let disableButton = false
+  const [disableButton , setDisableButton] = useState(false)
 
   //function for get messages
   const getMessages = async () => {
@@ -83,6 +83,7 @@ const MessageScreen = ({
 
       try {
 
+        setDisableButton(true)
         let encryptedMessage = ""
 
         if (inputValue) {
@@ -92,13 +93,13 @@ const MessageScreen = ({
 
         }
 
-        disableButton = true
         const result = await sendMessageApi(encryptedMessage, receiver._id, file)
 
         if (result.success) {
           setInputValue("");
           setFile("")
           socket.emit("send-message", result.createdMessage)
+          setDisableButton(false)
         }
       } catch (error) {
         const errorMessage = error?.response.data
@@ -245,13 +246,13 @@ const MessageScreen = ({
   }
 
   //function for send realtime "typing " feature
-  const handleRealtimeTyping = () => {
+  const handleRealtimeTyping = (typingUserId , receiverId) => {
 
-    socket.emit("typing-user" , userProfile._id)
+    socket.emit("typingUser" , typingUserId , receiverId)
 
     setTimeout(() => {
-      
-      socket.emit("remove-typing" , userProfile._id)
+
+      socket.emit("remove-typingUser" , typingUserId)
 
     } , 1000)
 
@@ -259,8 +260,10 @@ const MessageScreen = ({
 
   useEffect(() => {
 
-    socket.on("get-typingUsers" , (data) => {
-      setTypingUsers(data)
+    socket.on("get-typingUsers" , (typingUsersData) => {
+      
+      setTypingUsersData(typingUsersData)
+
     })
 
     return () => socket.off("get-typingUsers")
@@ -312,7 +315,7 @@ const MessageScreen = ({
                 onlineUsers.includes(receiver._id)
                 ?
                 (
-                  typingUsers.includes(receiver._id)
+                  typingUsersData?.to === userProfile?._id && typingUsersData?.from === receiver._id
                   ?
                   <span className="text-green-500 text-sm">Typing...</span>
                   :
@@ -474,7 +477,7 @@ const MessageScreen = ({
               null
           }
         </div>
-        {/* message send area */}
+        {/* message typing area */}
         <div className={`w-full h-full ${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} flex justify-center items-center`}>
           {
             blockedMessage
@@ -541,7 +544,7 @@ const MessageScreen = ({
                         onChange={(event) => setInputValue(event.target.value)}
                         className={`resize-none w-full h-full outline-none pl-5 pr-13 ${theme === "dark" ? "text-white placeholder-white" : "text-black"}`}
                         placeholder="Enter your message here"
-                        onKeyDown={handleRealtimeTyping}
+                        onKeyDown={() => handleRealtimeTyping(userProfile?._id , receiver._id)}
                         
                       ></textarea>
                       <img
