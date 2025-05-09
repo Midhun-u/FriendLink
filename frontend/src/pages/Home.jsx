@@ -30,7 +30,7 @@ const Home = () => {
   const [onlineUsers , setOnlineUsers] = useState([])
   const [blockedUsers , setBlockedUsers] = useState([])
   const { inView, ref } = useInView()
-
+  
   //function for get added user
   const getUsers = async () => {
     try {
