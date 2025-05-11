@@ -1,4 +1,4 @@
-import { generateToken } from "../config/generateToken.js"
+import { generateToken } from "../utilities/generateToken.js"
 import User from "../models/user.model.js"
 import uploadAsset from "../config/cloudinary.js"
 import sendOtp from "../config/nodemailer.js"

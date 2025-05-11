@@ -13,4 +13,7 @@ messageRouter.post("/sendMessage/:receiverId" , protectMiddleware , sendMessageC
 //route for get messages
 messageRouter.get("/getMessage/:receiverId" , protectMiddleware , getMessageController)
 
+//route for generate stream toke
+messageRouter.get("/get-streamToken" , protectMiddleware , )
+
 export {messageRouter}

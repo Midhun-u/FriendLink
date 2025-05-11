@@ -1,7 +1,8 @@
 import User from '../models/user.model.js'
 import {Message} from '../models/message.model.js'
 import uploadAsset from '../config/cloudinary.js'
-import { encryptFile } from '../config/encryptFile.js'
+import { encryptFile } from '../utilities/encryptFile.js'
+import { generateStreamToken } from '../config/stream.js'
 
 //controller for get added users
 export const getAddedUsersController = async (request , response) => {
@@ -144,6 +145,32 @@ export const getMessageController = async (request , response) => {
 
         response.status(500).json({error : "Server error"})
         console.log("getMessage controller error : " + error)
+
+    }
+
+}
+
+//controller for general stream token
+export const generateStreamTokenController = async (request , response) => {
+
+    try {
+        
+        const {id : userId} = request.user
+
+        if(userId){
+
+            const token = generateStreamToken(userId)
+
+            if(token){
+                response.status(200).json({success : true , streamToken : token})
+            }
+
+        }
+
+    } catch (error) {
+        
+        response.status(500).json({error : "Server error"})
+        console.log("generateStreamToken controller error : " + error)
 
     }
 
