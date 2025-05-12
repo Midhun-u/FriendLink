@@ -1,6 +1,7 @@
 export const socketHandler = (io) => {
 
   let onlineUsers = []
+  
   const typingUsers = {
     from : null,
     to : null
@@ -59,6 +60,25 @@ export const socketHandler = (io) => {
 
     })
 
+    //logout
+    socket.on("logout" , (userId) => {
+
+      if(userId){
+
+        const index = onlineUsers.indexOf(userId)
+        
+        if(index === 0 || index > 0){
+          
+          onlineUsers.splice(index , 1)
+  
+          io.emit("get-online-users" , onlineUsers)
+  
+        }
+
+      }
+
+    })
+
     //disconnect
     socket.on("disconnect" , () => {
       
@@ -66,10 +86,14 @@ export const socketHandler = (io) => {
 
       if(disconnectUserId){
 
-        const filteredOnlineUsers = onlineUsers.filter(onlineUsersId => onlineUsersId != disconnectUserId)
-        onlineUsers = filteredOnlineUsers
+        const index = onlineUsers.indexOf(disconnectUserId)
 
-        io.emit("get-online-users" , onlineUsers)
+        if(index === 0 || index > 0){
+
+          onlineUsers.splice(index , 0)
+          io.emit("get-online-users" , onlineUsers)
+
+        }
 
       }
 

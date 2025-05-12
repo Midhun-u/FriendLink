@@ -9,7 +9,9 @@ import {useNavigate} from 'react-router'
 import { getBlockedUsers, unblockUser } from "../api/peopleApi";
 import {useInView} from 'react-intersection-observer'
 import Loader from '../components/Loader'
-import axiosInstance from "../api/axiosInstance";
+import {io} from 'socket.io-client'
+
+const socket = io(import.meta.env.VITE_SOCKET_CONNECTION_URL)
 
 const Settings = () => {
 
@@ -115,8 +117,10 @@ const Settings = () => {
     try{
 
       const result = await logout()
-      
+
       if(result.success){
+
+        socket.emit("logout" , profile._id)
 
         toast.success(result.message)
         navigate("/login")

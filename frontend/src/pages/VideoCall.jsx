@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 import Loader from '../components/Loader'
 import Layout from '../components/Layout'
 import {useSelector} from 'react-redux'
+import { assets } from '../assets/assets'
 
 const VideoCall = () => {
 
@@ -85,7 +86,7 @@ const VideoCall = () => {
 
   return (
 
-    <div className={`w-screen h-screen flex flex-col items-center justify-center ${theme === "dark" ? "bg-blackForeground" : "bg-white"}`}>
+    <div className={`w-screen h-screen flex flex-col items-center justify-center ${theme === "dark" ? "bg-blackForeground text-white" : "bg-white text-black"}`}>
       {
           loading
           ?
@@ -107,8 +108,9 @@ const VideoCall = () => {
               </StreamVideo>
             </div>
             :
-            <div className='flex justify-center items-center'>
-              Null
+            <div className='flex justify-center items-center flex-col gap-4'>
+              <img className='w-20 h-20' src={assets.disconnectIcon} alt="" />
+              <span className='text-lg'>Could not found</span>
             </div>
         }
       </div>

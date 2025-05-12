@@ -177,12 +177,11 @@ const People = () => {
               <div
                 className={`w-35 cursor-pointer min-h-20 lg:w-50 ${theme === "dark" ? "bg-blackForeground" : "bg-white"} rounded-lg flex justify-start py-5 flex-col items-center px-2 relative gap-5`}
                 key={index}
-                onClick={() => {
+              >
+                <div onClick={() => {
                   setPerson(person)
                   setProfileScreen(true)
-                }}
-              >
-                <div>
+                }}>
                   {person.profilePic ? (
                     <img
                       className="w-15 h-15 rounded-full"
@@ -209,7 +208,10 @@ const People = () => {
                     />
                   )}
                 </div>
-                <div className="flex flex-col w-full items-center overflow-hidden">
+                <div onClick={() => {
+                  setPerson(person)
+                  setProfileScreen(true)
+                }} className="flex flex-col w-full items-center overflow-hidden">
                   <span className={`w-full text-center overflow-hidden ${theme === "dark" ? "text-white" : "text-black"}`}>
                     {person.fullName}
                   </span>

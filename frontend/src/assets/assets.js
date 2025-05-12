@@ -41,6 +41,7 @@ import blockedUsersIcon from './blocked_users.png'
 import logoutIcon from './logout.png'
 import unblockIcon from './unblock.png'
 import notUserFoundIcon from './person_not_found.png'
+import disconnectIcon from './disconnect.png'
 
 const assets = {
     logo : logo,
@@ -85,7 +86,8 @@ const assets = {
     blockedUsersIcon : blockedUsersIcon,
     logoutIcon : logoutIcon,
     unblockIcon : unblockIcon,
-    notUserFoundIcon : notUserFoundIcon
+    notUserFoundIcon : notUserFoundIcon,
+    disconnectIcon : disconnectIcon,
 }
 
 export {assets}

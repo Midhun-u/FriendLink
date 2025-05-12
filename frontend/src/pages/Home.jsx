@@ -16,21 +16,21 @@ import {useSelector} from 'react-redux'
 const socket = io(import.meta.env.VITE_SOCKET_CONNECTION_URL)
 
 const Home = () => {
-  
+
   const {theme} = useSelector(state => state.theme)
-  const [messageScreen, setMessageScreen] = useState(false);
-  const [addedUsers, setAddedUsers] = useState([]);
-  const [searchUsers, setSearchUsers] = useState([]);
+  const [messageScreen, setMessageScreen] = useState(false)
+  const [addedUsers, setAddedUsers] = useState([])
+  const [searchUsers, setSearchUsers] = useState([])
   const [searchScreen , setSearchScreen] = useState(false)
-  const [receiver, setReceiver] = useState();
-  const [userProfile, setUserProfile] = useState();
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const navigate = useNavigate();
+  const [receiver, setReceiver] = useState()
+  const [userProfile, setUserProfile] = useState()
+  const [page, setPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const navigate = useNavigate()
   const [onlineUsers , setOnlineUsers] = useState([])
   const [blockedUsers , setBlockedUsers] = useState([])
   const { inView, ref } = useInView()
-  
+
   //function for get added user
   const getUsers = async () => {
     try {
