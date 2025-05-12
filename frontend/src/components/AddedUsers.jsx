@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { decryptMessageFunction, getMessageTime } from "../utilities/utilities";
 import { assets } from "../assets/assets";
 import { NavLink } from "react-router";
@@ -13,7 +13,7 @@ const AddedUsers = ({
   onlineUsers,
   blockedUsers,
   totalCount,
-  ref
+  ref,
 }) => { 
 
   const {theme} = useSelector(state => state.theme)
@@ -98,7 +98,7 @@ const AddedUsers = ({
                   className={`text-textColor h-auto max-h-12 overflow-hidden`}
                 >
                   {
-                    getLatestMessages(user.lastMessages , user._id)
+                    getLatestMessages(user.lastMessages)
                   }
                 </span>
               </div>

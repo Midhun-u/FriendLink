@@ -90,9 +90,11 @@ export const socketHandler = (io) => {
 
         if(index === 0 || index > 0){
 
-          onlineUsers.splice(index , 0)
+          onlineUsers.splice(index , 1)
           io.emit("get-online-users" , onlineUsers)
 
+        }else{
+          io.emit("get-online-users" , onlineUsers)
         }
 
       }
