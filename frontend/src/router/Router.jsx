@@ -10,6 +10,7 @@ import Profile from '../pages/Profile'
 import Settings from '../pages/Settings'
 import NotFound from '../pages/NotFound'
 import ShowFile from '../components/ShowFile'
+import VideoCall from '../pages/VideoCall'
 
 const Router = () => {
 
@@ -26,6 +27,7 @@ const Router = () => {
         <Route path='/profile' element = {<Profile />} />
         <Route path='/settings' element = {<Settings />} />
         <Route path='/file' element = {<ShowFile />} />
+        <Route path='/call/:callId' element = {<VideoCall />} />
         <Route path='*' element = {<NotFound />} />
       </Routes>
     </>

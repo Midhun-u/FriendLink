@@ -151,7 +151,7 @@ export const getMessageController = async (request , response) => {
 }
 
 //controller for general stream token
-export const generateStreamTokenController = async (request , response) => {
+export const getStreamTokenController = async (request , response) => {
 
     try {
         
@@ -159,7 +159,7 @@ export const generateStreamTokenController = async (request , response) => {
 
         if(userId){
 
-            const token = generateStreamToken(userId)
+            const token = await generateStreamToken(userId)
 
             if(token){
                 response.status(200).json({success : true , streamToken : token})
@@ -170,7 +170,7 @@ export const generateStreamTokenController = async (request , response) => {
     } catch (error) {
         
         response.status(500).json({error : "Server error"})
-        console.log("generateStreamToken controller error : " + error)
+        console.log("getStreamToken controller error : " + error)
 
     }
 

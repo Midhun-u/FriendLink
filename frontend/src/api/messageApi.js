@@ -27,3 +27,14 @@ export const getMessageApi = async (receiverId , page = 1) => {
     }
 
 }
+
+export const getStreamToken = async (userId) => {
+
+    if(userId){
+
+        const response = (await axiosInstance.get("/message/get-streamToken")).data
+        return response
+
+    }
+
+}

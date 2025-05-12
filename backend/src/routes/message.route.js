@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { protectMiddleware } from "../middlewares/protectMiddleware.js"
-import { getAddedUsersController, getMessageController, sendMessageController } from "../controllers/message.controller.js"
+import { getStreamTokenController, getAddedUsersController, getMessageController, sendMessageController } from "../controllers/message.controller.js"
 
 const messageRouter = Router()
 
@@ -14,6 +14,6 @@ messageRouter.post("/sendMessage/:receiverId" , protectMiddleware , sendMessageC
 messageRouter.get("/getMessage/:receiverId" , protectMiddleware , getMessageController)
 
 //route for generate stream toke
-messageRouter.get("/get-streamToken" , protectMiddleware , )
+messageRouter.get("/get-streamToken" , protectMiddleware , getStreamTokenController)
 
 export {messageRouter}

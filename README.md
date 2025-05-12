@@ -32,3 +32,4 @@
 *Socket io
 *ENV
 *Nodemailer
+*Stream

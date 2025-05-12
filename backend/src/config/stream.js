@@ -1,9 +1,9 @@
-import {StreamVideoClient} from '@stream-io/node-sdk'
+import {StreamChat} from 'stream-chat'
 import 'dotenv/config'
 
 
 //setup stream
-const streamClient = new StreamVideoClient(
+const streamClient = new StreamChat(
     process.env.STREAM_API_KEY,
     process.env.STREAM_API_SECRET
 )
@@ -17,8 +17,8 @@ const generateStreamToken = async (userId) => {
     
         if(userIdStr){
     
-            const token = await streamClient.createToken(userIdStr)
-            console.log(token)
+            //generate stream token
+            const token = streamClient.createToken(userIdStr)
             return token
     
         }

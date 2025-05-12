@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-firebase/auth": "^0.2.10",
     "@reduxjs/toolkit": "^2.6.1",
+    "@stream-io/video-react-sdk": "^1.16.0",
     "@tailwindcss/vite": "^4.0.16",
     "axios": "^1.8.4",
     "crypto-js": "^4.2.0",

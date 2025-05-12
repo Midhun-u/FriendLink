@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { assets } from "../assets/assets";
-import { getMessageApi, sendMessageApi } from "../api/messageApi"
+import { getMessageApi, getStreamToken, sendMessageApi } from "../api/messageApi"
 import { toast } from "react-toastify";
 import { useInView } from "react-intersection-observer"
 import Loader from "../components/Loader"
@@ -270,6 +270,98 @@ const MessageScreen = ({
 
   } , [])
 
+  //function for video call
+  const handleVideoCall = async () => {
+
+    try {
+
+        const channelId = [userProfile?._id , receiver._id].sort().join("-") //generate channel id
+        const callURL = `${window.location.origin}/call/${channelId}` //generate call URL
+        
+        const encryptedMessage = encryptMessageFunction(callURL)  //encrypt message
+        const message = await sendMessageApi(encryptedMessage, receiver._id)
+
+        if (message.success) {
+          setInputValue("");
+          setFile("")
+          socket.emit("send-message", message.createdMessage)
+        }
+
+      
+    } catch (error) {
+      
+      const errorMessage = error?.response.data
+
+      if (errorMessage.auth === false) {
+        navigate("/login")
+      } else if (errorMessage.message) {
+        toast.error(errorMessage.message)
+      } else {
+        toast.error("Something went wrong");
+      }
+
+    }
+
+  }
+
+  //function for navigate to video call section
+  const handleVideoCallNavigation = async (urlStr) => {
+
+    if(urlStr){
+
+      if(urlStr.includes("http://") || urlStr.includes("https://")){
+
+        try{
+
+          const url = new URL(urlStr)
+
+          if(url.protocol && url.origin){
+
+            const result = await getStreamToken(userProfile?._id)
+
+            if(result.success){
+
+              localStorage.setItem("stream-token" , result.streamToken)
+              localStorage.setItem("user" , JSON.stringify(userProfile))
+              window.location.href = url
+
+            }
+
+          }
+
+        }catch(error){
+          return 
+        }
+      }
+
+    }else{
+      return 
+    }
+
+  }
+
+  //function for set cursor pointer when hover a url
+  const handleHoverURL = (urlstr , event) => {
+
+    try{
+
+      if(urlstr.includes("http://") || urlstr.includes("https://")){
+
+        const url = new URL(urlstr)
+
+        if(url.protocol && url.origin){
+          
+          event.target.style.cursor = 'pointer'
+
+        }
+      }
+
+    }catch(error){
+      return 
+    }
+
+  }
+
   return (
     <>
     {/* top bar */}
@@ -332,6 +424,7 @@ const MessageScreen = ({
               src={assets.videoCallIcon}
               alt=""
               title="Video call"
+              onClick={handleVideoCall}
             />
             <img
               onClick={() => setMoreSection(!moreSection)}
@@ -441,8 +534,10 @@ const MessageScreen = ({
                               : "bg-[#39B1D9] text-white"
                               } rounded-md overflow-hidden`}
                           >
-                            <p className="break-all whitespace-normal lg:text-lg md:text-md text-sm">
-                              {decryptMessageFunction(message.message)}
+                            <p onClick={() => handleVideoCallNavigation(decryptMessageFunction(message.message))} onMouseEnter={(event) => handleHoverURL(decryptMessageFunction(message.message) , event)} className="break-all whitespace-normal lg:text-lg md:text-md text-sm">
+                              { 
+                                decryptMessageFunction(message.message)
+                              }
                             </p>
                           </div>
                       )
