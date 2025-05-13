@@ -40,6 +40,7 @@
 *ENV
 *Nodemailer
 *Stream
+*MVC architecture
 
 # Clone the repository
 git clone https://github.com/Midhun-u/FriendLink.git
