@@ -11,7 +11,7 @@ export const generateToken = async (userId , name , email , response) => {
             httpOnly : true,
             secure : process.env.NODE_ENV === "production",
             maxAge : 30 * 24 * 60 * 60 * 1000, //for 30 days
-            sameSite : "strict",
+            sameSite : "none",
         })
 
     }
