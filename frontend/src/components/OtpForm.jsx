@@ -5,6 +5,7 @@ import { assets } from "../assets/assets";
 import { useNavigate } from "react-router";
 
 const OtpForm = ({ userEmail, otpDetails, setOtpDetails }) => {
+  
   const limit = 4;
   const [otp, setOtp] = useState(new Array(limit).fill(""));
   const [count, setCount] = useState(60);
@@ -49,7 +50,7 @@ const OtpForm = ({ userEmail, otpDetails, setOtpDetails }) => {
     }
   };
 
-  //function focus input field backward
+  //function for focus input field backward when click backspace
   const handleDelete = (index, event) => {
     if (event.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1].focus();

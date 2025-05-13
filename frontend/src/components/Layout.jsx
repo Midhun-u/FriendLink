@@ -3,7 +3,7 @@ import { useNavigate } from "react-router"
 import {useSelector} from 'react-redux'
 import '@stream-io/video-react-sdk/dist/css/styles.css'
 
-const Layout = ({CallingState}) => {
+const Layout = ({CallingState , user}) => {
 
   const {useCallCallingState} = useCallStateHooks()
   const callingState = useCallCallingState()
@@ -11,7 +11,9 @@ const Layout = ({CallingState}) => {
   const {theme} = useSelector(state => state.theme)
 
   if(callingState === CallingState.LEFT){
+
     navigate("/")
+
   }
 
   return (

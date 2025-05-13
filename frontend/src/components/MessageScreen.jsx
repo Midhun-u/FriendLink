@@ -321,8 +321,8 @@ const MessageScreen = ({
 
             if(result.success){
 
-              localStorage.setItem("stream-token" , result.streamToken)
-              localStorage.setItem("user" , JSON.stringify(userProfile))
+              sessionStorage.setItem("stream-token" , result.streamToken)
+              sessionStorage.setItem("user" , JSON.stringify(userProfile))
               window.location.href = url
 
             }
@@ -352,6 +352,7 @@ const MessageScreen = ({
         if(url.protocol && url.origin){
           
           event.target.style.cursor = 'pointer'
+          event.target.style.textDecoration = 'underline'
 
         }
       }
@@ -380,13 +381,13 @@ const MessageScreen = ({
               src={assets.backButtonIcon}
               alt=""
             />
-            {receiver.profilePic ? (
+            {receiver?.profilePic ? (
               <img
                 className="w-13 h-13 lg:w-18 lg:h-18 rounded-full"
-                src={receiver.profilePic}
+                src={receiver?.profilePic}
                 alt=""
               />
-            ) : receiver.gender === "Male" ? (
+            ) : receiver?.gender === "Male" ? (
               <img
                 className="w-13 h-13 lg:w-18 lg:h-18 rounded-full "
                 src={assets.maleGenderIcon}
@@ -400,14 +401,14 @@ const MessageScreen = ({
               />
             )}
             <div className="flex flex-col items-start">
-              <span className={`lg:text-lg ${theme === "dark" ? "text-white" : "text-black"}`}>{receiver.fullName}</span>
-              {blockedUsers?.includes(receiver._id) ? (
+              <span className={`lg:text-lg ${theme === "dark" ? "text-white" : "text-black"}`}>{receiver?.fullName}</span>
+              {blockedUsers?.includes(receiver?._id) ? (
                 <span className="text-red-600 text-sm">Blocked</span>
               ) : (
-                onlineUsers.includes(receiver._id)
+                onlineUsers.includes(receiver?._id)
                 ?
                 (
-                  typingUsersData?.to === userProfile?._id && typingUsersData?.from === receiver._id
+                  typingUsersData?.to === userProfile?._id && typingUsersData?.from === receiver?._id
                   ?
                   <span className="text-green-500 text-sm">Typing...</span>
                   :
@@ -439,9 +440,9 @@ const MessageScreen = ({
                   blockedMessage
                     ?
                     <div onClick={() => {
-                      handleUnBlockUser(receiver._id)
+                      handleUnBlockUser(receiver?._id)
                       setBlockedUsers(pre => {
-                        const filteredBlockedUsers = pre.filter(blockUsersId => blockUsersId !== receiver._id)
+                        const filteredBlockedUsers = pre.filter(blockUsersId => blockUsersId !== receiver?._id)
                         return filteredBlockedUsers
                       })
                     }} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-gray-100"} px-5`}>
@@ -450,8 +451,8 @@ const MessageScreen = ({
                     </div>
                     :
                     <div onClick={() => {
-                      handleBlockUser(receiver._id)
-                      setBlockedUsers(pre => [...pre , receiver._id])
+                      handleBlockUser(receiver?._id)
+                      setBlockedUsers(pre => [...pre , receiver?._id])
                     }} className={`w-full h-12 lg:h-15 flex items-center gap-3 cursor-pointer hover:${theme === "dark" ? "bg-blackBackground" : "bg-white"} px-5`}>
                       <img
                         className="w-7 h-7 lg:w-10 lg:h-10"

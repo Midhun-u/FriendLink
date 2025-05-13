@@ -103,6 +103,7 @@ const Home = () => {
   }, [inView])
 
   useEffect(() => {
+    
     if (sessionStorage.length) {
       setReceiver(JSON.parse(sessionStorage.getItem("person")));
       setMessageScreen(true);

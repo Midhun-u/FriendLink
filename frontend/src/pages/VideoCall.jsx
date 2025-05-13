@@ -58,15 +58,14 @@ const VideoCall = () => {
 
   useEffect(() => {
 
-    if (localStorage.length > 0 && localStorage.getItem("stream-token")) {
+    if (sessionStorage.length > 0 && sessionStorage.getItem("stream-token")) {
 
-      const streamToken = localStorage.getItem("stream-token")
-      const user = JSON.parse(localStorage.getItem("user"))
+      const streamToken = sessionStorage.getItem("stream-token")
+      const user = JSON.parse(sessionStorage.getItem("user"))
       setToken(streamToken)
       setUser(user)
 
-      localStorage.setItem("stream-token" , null)
-      localStorage.setItem("user" , null)
+      sessionStorage.clear()
 
     } else {
 
@@ -103,7 +102,7 @@ const VideoCall = () => {
             <div>
               <StreamVideo client={client}>
                 <StreamCall call={call}>
-                  <Layout CallingState={CallingState} />
+                  <Layout CallingState={CallingState} user={user} />
                 </StreamCall>
               </StreamVideo>
             </div>
