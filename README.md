@@ -14,7 +14,8 @@
 * User can add other person
 * Logout feature
 * User can block and unblock other person
-* 
+* OTP
+* User can reset their password
 
 
 #Technologies
