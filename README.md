@@ -9,6 +9,7 @@
 * Online/offline user and typing status
 * Responsive UI for mobile and desktop 
 * Message encrypt
+* Theme change option
 * Send image and video
 * Video call feature
 * User can add other person
